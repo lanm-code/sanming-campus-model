@@ -1,3 +1,5 @@
+import campus from './campus-data.json' with {type:'json'};
+export const campusBase=campus;
 const makeRooms = (floor, rows) => rows.map(([number, name, suffix = '']) => ({
   id: 'index-' + floor + '-' + (number || 'named') + (suffix || (number ? '' : '-' + rows.findIndex(r => r[1] === name))),
   floor, number, name, tags: [name.includes('机房') ? '电脑机房' : name.includes('实验') ? '实验室' : name.includes('画室') || name.includes('写生') ? '美术' : name.includes('办公室') ? '办公' : '教学空间'],
@@ -15,8 +17,25 @@ export const indexedRooms = [
 ];
 export const buildings = [
   {id:'library',name:'逸夫图书馆',aliases:['图书馆'],category:'study',categoryLabel:'学习空间',model:'library',position:[-25,0,14],labelHeight:27,description:'两座高低不同的塔楼与弧形入口，是校园里很容易辨认的建筑。',sources:['现场照片 36、58、63、127','学校官方校园示意图'],facts:['前部弧形入口与蓝色玻璃带参考照片58。','背面可见负一层架空空间，详见照片36、127。'],floorNote:'楼层用途与室内教室资料待补充。',floors:[],rooms:[]},
-  {id:'boxue',name:'博学楼',aliases:[],category:'teaching',categoryLabel:'教学建筑',model:'boxue',position:[28,0,10],labelHeight:25,description:'围合体块、转角入口与前后台地，先保留能辨认的建筑特征。',sources:['现场照片 47、64、65、66','用户提供的入口说明'],facts:['正面入口位于二层（照片64及说明）。','背面小门通往一层（照片47及说明）。'],floorNote:'照片67的索引名称为“综合实验楼”，暂未将其中教室归入博学楼。',floors:[],rooms:[]},
+  {id:'boxue',name:'博学楼',aliases:[],category:'teaching',categoryLabel:'教学建筑',model:'boxue',position:[28,0,10],labelHeight:25,description:'多条教学翼、两处院落空隙与弧形转角；前后入口分别对应二层和一层，高差继续核对。',sources:['现场照片 47、64、65、66、71','用户提供的入口说明'],facts:['正面入口位于二层（照片64及说明）。','背面小门通往一层（照片47及说明）。','位于逸夫图书馆北侧，两者均在致用大道西侧。'],floorNote:'照片67的索引名称为“综合实验楼”，暂未将其中教室归入博学楼。',floors:[],rooms:[]},
   {id:'administration',name:'行政楼',aliases:[],category:'service',categoryLabel:'行政服务',model:'administration',position:[3,0,-43],labelHeight:36,description:'以浅色主楼、中央玻璃立面和门厅表现建筑轮廓。',sources:['现场照片 91、95、98、100、101','用户确认的西北门与广场关系'],facts:['西北门前广场是项目相对高度基准。','广场至行政楼有台阶；此处高度是显示参数。'],floorNote:'尚未获得可核对的室内楼层用途清单。',floors:[],rooms:[]},
   {id:'experiment-index',name:'综合实验楼 · 楼层资料',aliases:['综合实验楼','公共机房','分布索引'],category:'teaching',categoryLabel:'楼层资料',model:null,position:null,labelHeight:null,description:'来自现场分布索引的教室资料。建筑归属待核对，暂不在地图生成点位。',sources:['现场照片67：三明学院综合实验楼分布索引'],facts:['按索引保留1F—6F和真实名称、编号。','408前门与后门分别建条目，防止编号覆盖。','照片记录的用途尚未核对是否有后续调整。'],floorNote:'可按楼层查找；具体门位尚未标注。',floors:[1,2,3,4,5,6],rooms:indexedRooms}
 ];
 export const sourceUrl = 'https://xiaoqing.fjsmu.edu.cn/map';
+for(const traced of campus.coreBuildings){
+  const b=buildings.find(b=>b.id===traced.id);
+  b.position=[traced.position[0],0,traced.position[1]];b.modelScale=traced.scale;b.rotation=traced.rotation;
+  b.labelHeight*=traced.scale[1];b.positionStatus=traced.status;
+  b.sources.push('坐标框影像近似描绘；非测绘点位');
+  b.facts.push('当前位置在统一米制框中近似描绘，朝向与间距仍需现场核对。');
+}
+for(const traced of campus.contextBuildings){
+  const center=traced.points.reduce((p,q)=>[p[0]+q[0]/traced.points.length,p[1]+q[1]/traced.points.length],[0,0]);
+  const local=p=>[p[0]-center[0],p[1]-center[1]];
+  buildings.push({id:'outline-'+traced.id,name:traced.name??(traced.id.startsWith('N')?'北区':'南区')+'建筑轮廓 '+traced.id,aliases:traced.aliases??[],category:traced.category??'unverified',categoryLabel:traced.name?'照片对应建筑':'身份待核对',model:'footprint',
+    position:[center[0],0,center[1]],positionStatus:traced.status,labelHeight:traced.height+5,
+    footprint:traced.points.map(local),holes:traced.holes.map(ring=>ring.map(local)),visualHeight:traced.height,
+    description:traced.name?'轮廓按参考影像近似描绘，具体立面与楼层资料继续核对。':'已记录建筑轮廓，真实名称、用途和立面待核对。',
+    sources:['坐标框影像近似描绘',...(traced.sourcePhotos??[]).map(n=>'现场照片/截图 '+n)],
+    facts:['显示高度为视觉参数，不代表实测高度或准确楼层数。','位置与轮廓为近似描绘；未完成全部现场核对。'],floorNote:'尚无核对通过的楼层教室资料。',floors:[],rooms:[]});
+}

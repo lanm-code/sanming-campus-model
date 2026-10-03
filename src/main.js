@@ -30,20 +30,20 @@ const app=document.querySelector('#app');
 app.innerHTML=`
 <header class="header">
   <a class="brand" href="./" aria-label="Campus Canvas 首页"><span class="brand-mark">${icon('map')}</span><span><strong>Campus Canvas</strong><small>三明学院 · 校园空间</small></span></a>
-  <div class="header-center"><span class="version-dot"></span>核心区域样片 <span class="version">v0.1</span></div>
+  <div class="header-center"><span class="version-dot"></span>全校园布局核对 <span class="version">v0.2</span></div>
   <div class="header-actions"><span id="network" class="network"></span><button class="text-button" id="about">${icon('info')}<span>资料说明</span></button><button class="icon-button mobile-only" id="explore" aria-label="打开地点列表" aria-expanded="false">${icon('menu')}</button></div>
 </header>
 <main class="workspace">
   <button id="scrim" class="scrim" aria-label="关闭地点列表" hidden></button>
   <aside class="explorer" aria-label="地点列表">
-    <div class="explorer-heading"><div><span class="eyebrow">EXPLORE CAMPUS</span><h1>探索明院</h1></div><span class="counter">03<span>建筑样片</span></span></div>
+    <div class="explorer-heading"><div><span class="eyebrow">EXPLORE CAMPUS</span><h1>探索明院</h1></div><span class="counter">${buildings.filter(b=>b.model).length}<span>建筑与轮廓</span></span></div>
     <label class="search">${icon('search')}<input id="search" type="search" placeholder="搜索建筑、教室名称或编号" autocomplete="off" aria-label="搜索建筑、教室名称或编号"/></label>
     <div class="filters" role="group" aria-label="地点分类"><button data-category="all" class="active" aria-pressed="true">全部</button><button data-category="teaching" aria-pressed="false">教学</button><button data-category="study" aria-pressed="false">学习</button><button data-category="service" aria-pressed="false">服务</button><button data-category="saved" aria-pressed="false">收藏</button></div>
     <div class="list-caption"><span id="result-title">校园地点</span><span id="result-count"></span></div><div id="results" class="results"></div>
     <div class="explorer-footer"><span class="tiny-dot"></span><div><strong>从真实资料出发</strong><p>建筑参考现场照片<br>教室保留原有名称与编号</p></div></div>
   </aside>
   <section class="map-area" aria-label="校园地图">
-    <div class="map-heading"><span class="pill">${icon('layers')}2.5D 校园</span><span class="map-note">布局示意 · 不供导航</span></div>
+    <div class="map-heading"><span class="pill">${icon('layers')}2.5D 校园</span><span class="map-note">校界、高差待核对</span><button id="north" class="north" title="朝北" aria-label="地图朝北">↑ N</button></div>
     <div id="map" class="map-canvas"></div>
     <div id="map-error" class="map-error" role="status" hidden></div>
     <div class="view-tools" role="group" aria-label="地图视角">
@@ -51,14 +51,16 @@ app.innerHTML=`
       <button id="rotate-right" title="向右旋转45度" aria-label="向右旋转45度">${icon('rotate')}</button>
       <span></span><button id="top" aria-pressed="false" title="俯视地图">2D</button>
       <button id="reset" title="恢复默认视角" aria-label="恢复默认视角">${icon('reset')}</button>
+      <button id="fit-campus" class="fit-campus" title="查看全校园工作范围" aria-label="查看全校园工作范围">全览</button>
     </div>
     <div class="zoom-tools"><button id="zoom-in" aria-label="放大地图">${icon('plus')}</button><button id="zoom-out" aria-label="缩小地图">${icon('minus')}</button></div>
-    <div class="map-guide"><span>${icon('pin')}点击建筑，了解空间</span><small><span class="desktop-guide">拖动平移 · 滚轮缩放 · 右键旋转</span><span class="mobile-guide">单指平移 · 双指缩放与旋转</span></small></div>
-    <div class="map-credit">Campus Canvas <span>/</span> 三明学院</div>
+    <div class="map-guide"><span>${icon('pin')}点击建筑，了解空间</span><small><span class="desktop-guide">左键滑动旋转 · 滚轮缩放 · 右键平移</span><span class="mobile-guide">单指旋转 · 双指缩放与平移</span></small></div>
+    <div id="map-scale" class="map-scale" aria-label="地图近似比例尺"><span></span><small></small></div>
+    <div class="map-credit"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a> · <a href="https://goto.arcgisonline.com/maps/World_Imagery" target="_blank" rel="noopener noreferrer">影像参考：Esri 等</a></div>
   </section>
   <aside id="detail" class="detail" aria-label="地点详情" hidden></aside>
 </main>
-<dialog id="about-dialog" aria-labelledby="about-title"><div class="dialog-heading"><h2 id="about-title">资料与当前范围</h2><button id="close-about" class="icon-button" aria-label="关闭资料说明">${icon('close')}</button></div><p>这是校园地图的第一份可操作样片。三座建筑参考现场照片简化建模，位置、尺寸与高度仍为示意。</p><div class="notice">目前未地理配准，不提供导航。教室清单来自现场索引，具体门位尚未标注。</div><h3>保留真实名称</h3><p>“综合实验楼分布索引”与博学楼的归属待核对，暂时单列楼层资料。408前门、后门分别保留，避免同编号条目被覆盖。</p><h3>接下来</h3><p>先校正主要建筑与高差关系，再扩展楼层及教室。天气、室内家具布置和APK在后续版本接入。</p><a class="source-link" href="${sourceUrl}" target="_blank" rel="noopener noreferrer">查看学校官方校园示意图 ${icon('arrow')}</a><small class="dialog-footnote">收藏和浏览位置保存在本机；清理浏览器数据会移除它们。</small></dialog>
+<dialog id="about-dialog" aria-labelledby="about-title"><div class="dialog-heading"><h2 id="about-title">资料与当前范围</h2><button id="close-about" class="icon-button" aria-label="关闭资料说明">${icon('close')}</button></div><p>这一版展示校园布局核对进度：三座照片参考模型、44个影像建筑轮廓，以及公开地图中的道路和运动场地。建筑位置在同一坐标底图上近似描绘；名称、外形和朝向继续逐项核对。</p><div class="notice">绿色底板是建模工作范围，完整校界尚未确认。建筑高度、道路宽度和入口台阶均为显示参数；校园高差尚未还原，不提供导航。道路与建筑冲突的片段暂时隐藏，等待核对，尚未补齐全部校内道路。</div><h3>整体尺度</h3><p>当前工作范围东西约0.74公里、南北约1.28公里，不代表已确认的校园边界。学校公布占地1429亩（约95.27万平方米）；公开地图候选边界明显小于这一统计，不能直接当作完整校界。</p><h3>保留真实名称</h3><p>未确认身份的建筑保留“轮廓”编号。“综合实验楼分布索引”与博学楼的归属待核对，暂时单列楼层资料。408前门、后门分别保留；教室具体门位尚未标注。</p><h3>接下来</h3><p>继续核对校界、各楼外形、道路与高差，优先补齐可辨认的入口和场地关系。天气、室内家具布置和APK在后续版本接入。</p><a class="source-link" href="${sourceUrl}" target="_blank" rel="noopener noreferrer">学校官方校园示意图 ${icon('arrow')}</a><br><a class="source-link" href="https://www.fjsmu.edu.cn/xxjj/list.htm" target="_blank" rel="noopener noreferrer">学校官方占地统计 ${icon('arrow')}</a><small class="dialog-footnote">道路/运动场几何：© OpenStreetMap contributors，通行性待核对。参考影像：Esri, Vantor, Earthstar Geographics, and the GIS User Community；影像拍摄日期未知。原始影像与现场照片不随网站发布。收藏和浏览位置保存在本机；清理浏览器数据会移除它们。</small></dialog>
 <div id="toast" class="toast" role="status" hidden></div>`;
 const $=id=>document.getElementById(id);
 function persist(){if(!writeState(storage,state))notify('本机存储不可用，此次浏览记录不会保存。');}
@@ -99,7 +101,7 @@ function renderDetail(){
   const rooms=b.rooms.filter(r=>r.floor===state.floor);
   detail.innerHTML='<div class="detail-top"><span class="eyebrow">'+(b.model?'CAMPUS PLACE':'FLOOR ARCHIVE')+'</span><button id="close-detail" class="icon-button" aria-label="关闭地点详情">'+icon('close')+'</button></div>'+
     '<div class="detail-title"><h2>'+escape(b.name)+'</h2><button id="favorite" class="icon-button favorite '+(favorite?'active':'')+'" aria-label="'+(favorite?'取消收藏':'收藏地点')+'" aria-pressed="'+favorite+'">'+icon('star')+'</button></div>'+
-    '<div class="detail-tags"><span>'+escape(b.categoryLabel)+'</span><span class="neutral">'+(b.model?'外形参考照片':'建筑归属待核对')+'</span></div>'+
+    '<div class="detail-tags"><span>'+escape(b.categoryLabel)+'</span><span class="neutral">'+(b.model?'影像近似位置':'建筑归属待核对')+'</span></div>'+
     '<p class="description">'+escape(b.description)+'</p>'+
     (b.model?'<button id="focus-building" class="focus-button">'+icon('pin')+'聚焦建筑</button>':'')+
     '<section class="floor-section"><div class="section-title"><h3>'+icon('layers')+'楼层与教室</h3>'+(b.floors.length?'<span>'+rooms.length+' 个空间</span>':'')+'</div>'+
@@ -136,6 +138,8 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!dialog.open)setExp
 const map=createCampusMap($('map'),buildings,id=>selectBuilding(id),message=>{$('map-error').textContent=message;$('map-error').hidden=false;});
 $('rotate-left').addEventListener('click',()=>map.rotate(-1));
 $('rotate-right').addEventListener('click',()=>map.rotate(1));
+$('fit-campus').addEventListener('click',()=>map.fit());
+$('north').addEventListener('click',()=>map.north());
 $('zoom-in').addEventListener('click',()=>map.zoom(1.2));$('zoom-out').addEventListener('click',()=>map.zoom(1/1.2));
 $('top').addEventListener('click',()=>{
   topView=!topView;map.top(topView);$('top').setAttribute('aria-pressed',String(topView));$('top').textContent=topView?'2.5D':'2D';
