@@ -2,9 +2,22 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import campus from '../src/campus-data.json' with {type:'json'};
 import {compileTerrain,containsPoint} from '../src/surface.js';
-import {createTerrainTriangles} from '../src/terrain-mesh.js';
+import {createTerrainTriangles,createMeshHeightSampler} from '../src/terrain-mesh.js';
 
 const height=compileTerrain(campus.surface);
+
+test('road draping samples sloped mesh faces and falls back only outside them',()=>{
+  const sample=createMeshHeightSampler(new Float32Array([0,0,0,10,10,0,0,0,10,10,10,0,10,10,10,0,0,10]),()=>-3,5);
+  assert.equal(sample(2,2),2);assert.equal(sample(8,8),8);assert.equal(sample(5,5),5);
+  assert.equal(sample(-1,2),-3);assert.equal(sample(15,5),-3);
+});
+
+test('mesh draping rejects malformed buffers and invalid query coordinates',()=>{
+  assert.throws(()=>createMeshHeightSampler([1,2],()=>0),TypeError);
+  assert.throws(()=>createMeshHeightSampler([0,NaN,0,1,0,0,0,0,1],()=>0),TypeError);
+  const sample=createMeshHeightSampler([0,0,0,1,0,0,0,0,1],()=>0);
+  assert.throws(()=>sample(Infinity,0),TypeError);
+});
 const triangles=createTerrainTriangles(campus.campusBoundary,campus.surface).map(points=>({points,heights:points.map(p=>height(...p)),minX:Math.min(...points.map(p=>p[0])),maxX:Math.max(...points.map(p=>p[0])),minZ:Math.min(...points.map(p=>p[1])),maxZ:Math.max(...points.map(p=>p[1]))}));
 // Independently interpolate the actual faces, rather than testing only the sampler.
 function meshHeight(x,z){

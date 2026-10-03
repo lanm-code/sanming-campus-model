@@ -21,3 +21,27 @@ export function createTerrainTriangles(boundary,surface){
   }
   return result;
 }
+
+// Interpolate the rendered x/y/z faces; outside the campus use the reference
+// surface. A spatial index keeps road draping local on large campus meshes.
+export function createMeshHeightSampler(positions,fallback,cellSize=20){
+  if(!positions||positions.length%9||!Number.isFinite(cellSize)||cellSize<=0||typeof fallback!=='function')throw new TypeError('Invalid terrain mesh sampler');
+  const cells=new Map(),key=(x,z)=>x+','+z;
+  for(let i=0;i<positions.length;i+=9){
+    const xs=[positions[i],positions[i+3],positions[i+6]],zs=[positions[i+2],positions[i+5],positions[i+8]];
+    if(!Array.from(positions.slice(i,i+9)).every(Number.isFinite))throw new TypeError('Terrain mesh contains nonfinite coordinates');
+    for(let x=Math.floor(Math.min(...xs)/cellSize);x<=Math.floor(Math.max(...xs)/cellSize);x++)for(let z=Math.floor(Math.min(...zs)/cellSize);z<=Math.floor(Math.max(...zs)/cellSize);z++){
+      const cell=key(x,z);if(!cells.has(cell))cells.set(cell,[]);cells.get(cell).push(i);
+    }
+  }
+  return (x,z)=>{
+    if(!Number.isFinite(x)||!Number.isFinite(z))throw new TypeError('Terrain coordinates must be finite');
+    for(const i of cells.get(key(Math.floor(x/cellSize),Math.floor(z/cellSize)))??[]){
+      const ax=positions[i],az=positions[i+2],bx=positions[i+3],bz=positions[i+5],cx=positions[i+6],cz=positions[i+8];
+      const det=(bz-cz)*(ax-cx)+(cx-bx)*(az-cz);if(Math.abs(det)<1e-12)continue;
+      const u=((bz-cz)*(x-cx)+(cx-bx)*(z-cz))/det,v=((cz-az)*(x-cx)+(ax-cx)*(z-cz))/det,w=1-u-v;
+      if(Math.min(u,v,w)>=-1e-5)return u*positions[i+1]+v*positions[i+4]+w*positions[i+7];
+    }
+    return fallback(x,z);
+  };
+}

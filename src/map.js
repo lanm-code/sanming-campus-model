@@ -4,7 +4,7 @@ import { isTap } from './state.js';
 import { campusBase } from './data.js';
 import { overviewExtent } from './geo.js';
 import { compileTerrain,intersectConvexPolygons } from './surface.js';
-import {createTerrainTriangles} from './terrain-mesh.js';
+import {createTerrainTriangles,createMeshHeightSampler} from './terrain-mesh.js';
 
 export function createCampusMap(container, buildings, onSelect, onError) {
   let renderer;
@@ -146,6 +146,7 @@ export function createCampusMap(container, buildings, onSelect, onError) {
   renderer.domElement.dataset.terrainTriangles=String(vertices.length/9);
   const groundGeometry=new THREE.BufferGeometry();groundGeometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));groundGeometry.setAttribute('color',new THREE.Float32BufferAttribute(groundColours,3));groundGeometry.setAttribute('normal',new THREE.Float32BufferAttribute(groundNormals,3));
   const ground=new THREE.Mesh(groundGeometry,new THREE.MeshStandardMaterial({vertexColors:true,roughness:1}));ground.receiveShadow=true;landscape.add(ground);
+  const meshHeight=createMeshHeightSampler(groundGeometry.attributes.position.array,heightAt);
   const parcelGeometry=new THREE.BufferGeometry();parcelGeometry.setAttribute('position',new THREE.Float32BufferAttribute(parcelVertices,3));parcelGeometry.setAttribute('color',new THREE.Float32BufferAttribute(parcelColours,3));parcelGeometry.setAttribute('normal',new THREE.Float32BufferAttribute(parcelNormals,3));
   const parcels=new THREE.Mesh(parcelGeometry,new THREE.MeshStandardMaterial({vertexColors:true,roughness:1}));parcels.receiveShadow=true;landscape.add(parcels);
   polygon(landscape,boundary,1,-4,materials.earth);
@@ -166,9 +167,9 @@ export function createCampusMap(container, buildings, onSelect, onError) {
     const a=boundary[i],b=boundary[(i+1)%boundary.length],length=Math.hypot(b[0]-a[0],b[1]-a[1]);
     for(let offset=0;offset<length;offset+=13){const end=Math.min(offset+8,length),p=[a[0]+(b[0]-a[0])*offset/length,a[1]+(b[1]-a[1])*offset/length],q=[a[0]+(b[0]-a[0])*end/length,a[1]+(b[1]-a[1])*end/length];ribbon(p,q,2,boundaryMaterial,(x,z)=>heightAt(x,z)+.32);}
   }
-  function ribbon(a,b,width,material,elevation=(x,z)=>heightAt(x,z)+.22){
+  function ribbon(a,b,width,material,elevation=(x,z)=>meshHeight(x,z)+.22){
     const dx=b[0]-a[0],dz=b[1]-a[1],length=Math.hypot(dx,dz);if(length<.1)return;
-    const nx=-dz/length*width/2,nz=dx/length*width/2,count=Math.ceil(length/6),positions=[];
+    const nx=-dz/length*width/2,nz=dx/length*width/2,count=Math.ceil(length/1.5),positions=[];
     for(let i=0;i<count;i++){
       const points=[i/count,(i+1)/count].flatMap(t=>[[-1,t],[1,t]].map(([side,t])=>{const x=a[0]+dx*t+nx*side,z=a[1]+dz*t+nz*side;return [x,elevation(x,z,t),z];}));
       for(const index of [0,1,2,2,1,3])positions.push(...points[index]);
@@ -307,6 +308,8 @@ export function createCampusMap(container, buildings, onSelect, onError) {
     projected.push({label,id:b.id,context:b.model==='footprint',position:new THREE.Vector3(b.position[0],b.labelHeight,b.position[2])});
   }
   let outline=null;
+  // Geometry owns its typed buffers; these build-time caches can be released.
+  normalCache.clear();heightCache.clear();
   const raycaster=new THREE.Raycaster(), mouse=new THREE.Vector2();
   const pointers=new Set();let gesture=null;
   const canvas=renderer.domElement;
