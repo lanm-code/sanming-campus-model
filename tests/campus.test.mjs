@@ -36,11 +36,11 @@ test('photo-supported landmark order and uncertain school boundary remain explic
   assert.ok(campus.areaSquareMeters<campus.publishedAreaSquareMeters*.5);
 });
 
-test('rendered road centre lines do not cross known context building interiors',()=>{
+test('rendered roads avoid context roofs and core foundations or entry stairs',()=>{
   for(const road of campus.roads)for(const [a,b] of road.segments){
     assert.ok([...a,...b].every(Number.isFinite));
     const length=Math.hypot(b[0]-a[0],b[1]-a[1]);
-    const outside=subtractPolygonSegments(a,b,campus.contextBuildings).reduce((sum,[p,q])=>sum+Math.hypot(q[0]-p[0],q[1]-p[1]),0);
+    const outside=subtractPolygonSegments(a,b,[...campus.contextBuildings,...campus.coreRoadMasks]).reduce((sum,[p,q])=>sum+Math.hypot(q[0]-p[0],q[1]-p[1]),0);
     assert.ok(Math.abs(length-outside)<.001,'Road '+road.id+' crosses a roof');
   }
 });

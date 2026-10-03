@@ -3,6 +3,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { isTap } from './state.js';
 import { campusBase } from './data.js';
 import { overviewExtent } from './geo.js';
+import { compileTerrain,intersectConvexPolygons } from './surface.js';
+import {createTerrainTriangles} from './terrain-mesh.js';
 
 export function createCampusMap(container, buildings, onSelect, onError) {
   let renderer;
@@ -48,6 +50,7 @@ export function createCampusMap(container, buildings, onSelect, onError) {
   sun.shadow.mapSize.set(1024,1024);
   Object.assign(sun.shadow.camera,{left:-1200,right:1200,top:1200,bottom:-1200,near:1,far:3500});
   sun.shadow.bias=-.002;
+  sun.shadow.normalBias=.6;
   scene.add(sun);
   const materials={
     wall:new THREE.MeshStandardMaterial({color:0xe8e0c9,roughness:.86}),
@@ -59,7 +62,10 @@ export function createCampusMap(container, buildings, onSelect, onError) {
     grass:new THREE.MeshStandardMaterial({color:0xadc49a,roughness:1}),
     tree:new THREE.MeshStandardMaterial({color:0x7da274,roughness:1}),
     trunk:new THREE.MeshStandardMaterial({color:0xa38f6b,roughness:1}),
-    dark:new THREE.MeshStandardMaterial({color:0x37545a,roughness:.5})
+    dark:new THREE.MeshStandardMaterial({color:0x37545a,roughness:.5}),
+    contextWall:new THREE.MeshStandardMaterial({color:0xb9c5c7,roughness:1}),
+    contextRoof:new THREE.MeshStandardMaterial({color:0xa1afb1,roughness:1}),
+    earth:new THREE.MeshStandardMaterial({color:0xb09b7d,roughness:1})
   };
   const stone=new THREE.MeshStandardMaterial({color:0xb69a87,roughness:.9});
   const unit = new THREE.BoxGeometry(1,1,1);
@@ -112,26 +118,112 @@ export function createCampusMap(container, buildings, onSelect, onError) {
     const mesh=new THREE.Mesh(geometry,material);mesh.position.y=base;mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;
   }
   const landscape=new THREE.Group();scene.add(landscape);
-  polygon(landscape,campusBase.workEnvelope,2,-2,materials.grass);
-  const roadMaterial=new THREE.MeshStandardMaterial({color:0xe4ddce,roughness:1});
-  const regionalMaterial=new THREE.MeshStandardMaterial({color:0xbbb8af,roughness:1});
+  const heightCache=new Map(),boundary=campusBase.campusBoundary,surface=campusBase.surface;
+  const sampleHeight=compileTerrain(surface);
+  const heightAt=(x,z)=>{const key=x.toFixed(3)+','+z.toFixed(3);if(!heightCache.has(key))heightCache.set(key,sampleHeight(x,z));return heightCache.get(key);};
+  const palette={green:0x9fbc87,plaza:0xe5d9ba,teaching:0xd9c89a,living:0xb7d0dc,sports:0x91b7a4};
+  const colours=Object.fromEntries(Object.entries(palette).map(([key,value])=>[key,new THREE.Color(value)]));
+  const vertices=[],groundColours=[],groundNormals=[],parcelVertices=[],parcelColours=[],parcelNormals=[];
+  const range=points=>({minX:Math.min(...points.map(p=>p[0])),maxX:Math.max(...points.map(p=>p[0])),minZ:Math.min(...points.map(p=>p[1])),maxZ:Math.max(...points.map(p=>p[1]))});
+  const overlaps=(a,b)=>a.minX<=b.maxX&&a.maxX>=b.minX&&a.minZ<=b.maxZ&&a.maxZ>=b.minZ;
+  const parcelFaces=surface.parcels.flatMap(p=>THREE.ShapeUtils.triangulateShape(p.points.map(([x,z])=>new THREE.Vector2(x,z)),[]).map(face=>{const points=face.map(i=>p.points[i]);return {points,bounds:range(points),colour:colours[p.type]??colours.green};}));
+  const normalCache=new Map();
+  const normalAt=(x,z)=>{const key=x.toFixed(3)+','+z.toFixed(3);if(!normalCache.has(key)){const n=new THREE.Vector3(heightAt(x-.5,z)-heightAt(x+.5,z),1,heightAt(x,z-.5)-heightAt(x,z+.5)).normalize();normalCache.set(key,[n.x,n.y,n.z]);}return normalCache.get(key);};
+  const winding=tri=>(tri[1][0]-tri[0][0])*(tri[2][1]-tri[0][1])-(tri[1][1]-tri[0][1])*(tri[2][0]-tri[0][0]);
+  const addFace=(triangle,colour,positions,colors,normals,elevation)=>{for(const [x,z] of winding(triangle)>0?[triangle[0],triangle[2],triangle[1]]:triangle){positions.push(x,elevation(x,z),z);colors.push(colour.r,colour.g,colour.b);normals.push(...normalAt(x,z));}};
+  for(const triangle of createTerrainTriangles(boundary,surface)){
+      addFace(triangle,colours.green,vertices,groundColours,groundNormals,heightAt);
+      const heights=triangle.map(p=>heightAt(...p)),denominator=winding(triangle),tb=range(triangle);
+      // Colour polygons follow the very same triangle plane, avoiding both jagged
+      // land-use outlines and depth flicker between independently sampled meshes.
+      const planeHeight=(x,z)=>{const [a,b,c]=triangle,u=((b[0]-x)*(c[1]-z)-(b[1]-z)*(c[0]-x))/denominator,v=((c[0]-x)*(a[1]-z)-(c[1]-z)*(a[0]-x))/denominator;return heights[0]*u+heights[1]*v+heights[2]*(1-u-v)+.06;};
+      for(const parcel of parcelFaces){
+        if(!overlaps(tb,parcel.bounds))continue;
+        const clipped=intersectConvexPolygons(triangle,parcel.points);
+        for(let i=1;i<clipped.length-1;i++)addFace([clipped[0],clipped[i],clipped[i+1]],parcel.colour,parcelVertices,parcelColours,parcelNormals,planeHeight);
+      }
+  }
+  renderer.domElement.dataset.terrainTriangles=String(vertices.length/9);
+  const groundGeometry=new THREE.BufferGeometry();groundGeometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));groundGeometry.setAttribute('color',new THREE.Float32BufferAttribute(groundColours,3));groundGeometry.setAttribute('normal',new THREE.Float32BufferAttribute(groundNormals,3));
+  const ground=new THREE.Mesh(groundGeometry,new THREE.MeshStandardMaterial({vertexColors:true,roughness:1}));ground.receiveShadow=true;landscape.add(ground);
+  const parcelGeometry=new THREE.BufferGeometry();parcelGeometry.setAttribute('position',new THREE.Float32BufferAttribute(parcelVertices,3));parcelGeometry.setAttribute('color',new THREE.Float32BufferAttribute(parcelColours,3));parcelGeometry.setAttribute('normal',new THREE.Float32BufferAttribute(parcelNormals,3));
+  const parcels=new THREE.Mesh(parcelGeometry,new THREE.MeshStandardMaterial({vertexColors:true,roughness:1}));parcels.receiveShadow=true;landscape.add(parcels);
+  polygon(landscape,boundary,1,-4,materials.earth);
+  const skirts=[];
+  for(let i=0;i<boundary.length;i++){
+    const a=boundary[i],b=boundary[(i+1)%boundary.length],count=Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/12);
+    for(let j=0;j<count;j++){
+      const p=[a[0]+(b[0]-a[0])*j/count,a[1]+(b[1]-a[1])*j/count],q=[a[0]+(b[0]-a[0])*(j+1)/count,a[1]+(b[1]-a[1])*(j+1)/count];
+      const topP=[p[0],heightAt(...p),p[1]],topQ=[q[0],heightAt(...q),q[1]],lowP=[p[0],-3,p[1]],lowQ=[q[0],-3,q[1]];
+      skirts.push(...topP,...lowP,...topQ,...topQ,...lowP,...lowQ);
+    }
+  }
+  const skirtGeometry=new THREE.BufferGeometry();skirtGeometry.setAttribute('position',new THREE.Float32BufferAttribute(skirts,3));skirtGeometry.computeVertexNormals();
+  landscape.add(new THREE.Mesh(skirtGeometry,new THREE.MeshStandardMaterial({color:0xb59c7d,roughness:1,side:THREE.DoubleSide})));
+  const ribbonBatches=new Map();
+  const boundaryMaterial=new THREE.MeshBasicMaterial({color:0x367bb5,side:THREE.DoubleSide,toneMapped:false});
+  for(let i=0;i<boundary.length;i++){
+    const a=boundary[i],b=boundary[(i+1)%boundary.length],length=Math.hypot(b[0]-a[0],b[1]-a[1]);
+    for(let offset=0;offset<length;offset+=13){const end=Math.min(offset+8,length),p=[a[0]+(b[0]-a[0])*offset/length,a[1]+(b[1]-a[1])*offset/length],q=[a[0]+(b[0]-a[0])*end/length,a[1]+(b[1]-a[1])*end/length];ribbon(p,q,2,boundaryMaterial,(x,z)=>heightAt(x,z)+.32);}
+  }
+  function ribbon(a,b,width,material,elevation=(x,z)=>heightAt(x,z)+.22){
+    const dx=b[0]-a[0],dz=b[1]-a[1],length=Math.hypot(dx,dz);if(length<.1)return;
+    const nx=-dz/length*width/2,nz=dx/length*width/2,count=Math.ceil(length/6),positions=[];
+    for(let i=0;i<count;i++){
+      const points=[i/count,(i+1)/count].flatMap(t=>[[-1,t],[1,t]].map(([side,t])=>{const x=a[0]+dx*t+nx*side,z=a[1]+dz*t+nz*side;return [x,elevation(x,z,t),z];}));
+      for(const index of [0,1,2,2,1,3])positions.push(...points[index]);
+    }
+    if(!ribbonBatches.has(material))ribbonBatches.set(material,[]);
+    ribbonBatches.get(material).push(...positions);
+  }
+  const roadMaterial=new THREE.MeshStandardMaterial({color:0x77888e,roughness:1,side:THREE.DoubleSide});
+  const regionalMaterial=new THREE.MeshStandardMaterial({color:0x9a9c9b,roughness:1,side:THREE.DoubleSide});
   for(const road of campusBase.roads){
     const regional=['trunk','trunk_link','secondary','unclassified'].includes(road.type),width=regional?8:5;
     for(const [a,b] of road.segments){
       const dx=b[0]-a[0],dz=b[1]-a[1],length=Math.hypot(dx,dz);if(length<.1)continue;
-      const strip=box(landscape,length+.15,.16,width,(a[0]+b[0])/2,.03,(a[1]+b[1])/2,regional?regionalMaterial:roadMaterial);
-      strip.rotation.y=-Math.atan2(dz,dx);strip.castShadow=false;
+      ribbon(a,b,width,regional?regionalMaterial:roadMaterial);
     }
+  }
+  const stepMaterial=new THREE.MeshStandardMaterial({color:0xc8ccc8,roughness:1});
+  for(const ramp of surface.ramps)ribbon(ramp.from,ramp.to,ramp.width,stepMaterial,(x,z,t)=>ramp.fromHeight+(ramp.toHeight-ramp.fromHeight)*t+.25);
+  for(const stair of surface.stairs){
+    const [a,b]=[stair.from,stair.to],dx=b[0]-a[0],dz=b[1]-a[1],length=Math.hypot(dx,dz);
+    for(let i=0;i<stair.steps;i++){
+      const t=(i+.5)/stair.steps,x=a[0]+dx*t,z=a[1]+dz*t;
+      const top=stair.fromHeight+(stair.toHeight-stair.fromHeight)*(stair.toHeight>stair.fromHeight?(i+1)/stair.steps:i/stair.steps)+.18;
+      const base=Math.min(heightAt(x,z),stair.fromHeight,stair.toHeight)-.25;
+      const step=box(landscape,stair.width,top-base,length/stair.steps+.02,x,base,z,stepMaterial);step.rotation.y=Math.atan2(dx,dz);
+    }
+  }
+  for(const bridge of surface.bridges){
+    ribbon(bridge.from,bridge.to,bridge.width,roadMaterial,(x,z,t)=>bridge.fromHeight+(bridge.toHeight-bridge.fromHeight)*t+.25);
+    const dx=bridge.to[0]-bridge.from[0],dz=bridge.to[1]-bridge.from[1],length=Math.hypot(dx,dz),nx=-dz/length*bridge.width/2,nz=dx/length*bridge.width/2;
+    for(const t of [.15,.85]){
+      const x=bridge.from[0]+dx*t,z=bridge.from[1]+dz*t,deck=bridge.fromHeight+(bridge.toHeight-bridge.fromHeight)*t+.25;
+      const base=Math.min(heightAt(x,z),bridge.lowerSurfaceHeight),height=deck-base;
+      for(const side of [-.65,.65])box(landscape,.8,height,.8,x+nx*side,base,z+nz*side,materials.trim);
+    }
+    for(const side of [-1,1]){
+      const points=[0,1].map(t=>new THREE.Vector3(bridge.from[0]+dx*t+nx*side,bridge.fromHeight+(bridge.toHeight-bridge.fromHeight)*t+1,bridge.from[1]+dz*t+nz*side));
+      landscape.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),new THREE.LineBasicMaterial({color:0xe1e5e0})));
+    }
+  }
+  for(const [material,positions] of ribbonBatches){
+    const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.computeVertexNormals();
+    const mesh=new THREE.Mesh(geometry,material);mesh.receiveShadow=true;landscape.add(mesh);
   }
   const pitchMaterial=new THREE.MeshStandardMaterial({color:0x86ad88,roughness:1});
   const courtMaterial=new THREE.MeshStandardMaterial({color:0xbf9585,roughness:1});
   const trackMaterial=new THREE.MeshStandardMaterial({color:0xb97866,roughness:1});
   for(const area of campusBase.sportsAreas??[]){
-    polygon(landscape,area.points,.08,.14,area.type==='basketball'||area.type==='track'?trackMaterial:pitchMaterial);
+    const center=area.points.reduce((p,q)=>[p[0]+q[0]/area.points.length,p[1]+q[1]/area.points.length],[0,0]);
+    polygon(landscape,area.points,.08,heightAt(...center)+.14,area.scopeStatus==='outside-reference'?materials.contextWall:area.type==='basketball'||area.type==='track'?trackMaterial:pitchMaterial);
   }
   for(const field of campusBase.sports){
-    polygon(landscape,field.points,.12,.22,field.type==='basketball'?courtMaterial:pitchMaterial);
-    const linePoints=[...field.points,field.points[0]].map(([x,z])=>new THREE.Vector3(x,.38,z));
+    const center=field.points.reduce((p,q)=>[p[0]+q[0]/field.points.length,p[1]+q[1]/field.points.length],[0,0]),height=heightAt(...center);
+    polygon(landscape,field.points,.12,height+.22,field.type==='basketball'?courtMaterial:pitchMaterial);
+    const linePoints=[...field.points,field.points[0]].map(([x,z])=>new THREE.Vector3(x,height+.38,z));
     scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(linePoints),new THREE.LineBasicMaterial({color:0xf4f2e6})));
   }
   const labels=document.createElement('div');labels.className='map-labels';container.append(labels);
@@ -139,15 +231,18 @@ export function createCampusMap(container, buildings, onSelect, onError) {
   for(const field of campusBase.sports.filter(f=>f.type==='soccer')){
     const c=field.points.reduce((p,q)=>[p[0]+q[0]/field.points.length,p[1]+q[1]/field.points.length],[0,0]);
     const label=document.createElement('span');label.className='map-label field-label';label.textContent=field.name;labels.append(label);
-    projected.push({label,id:'field-'+field.id,context:false,position:new THREE.Vector3(c[0],2,c[1])});
+    projected.push({label,id:'field-'+field.id,context:false,position:new THREE.Vector3(c[0],heightAt(...c)+2,c[1])});
   }
   for(const b of buildings.filter(b=>b.model)){
     const g=new THREE.Group();g.position.fromArray(b.position);g.userData.buildingId=b.id;
     g.rotation.y=b.rotation??0;if(b.modelScale)g.scale.fromArray(b.modelScale);
     if(b.model==='footprint'){
-      polygon(g,b.footprint,b.visualHeight,0,materials.wall,b.holes);
-      polygon(g,b.footprint,.5,b.visualHeight,materials.roof,b.holes);
+      const outside=b.scopeStatus==='outside-reference'||b.scopeStatus==='crosses-reference';
+      polygon(g,b.footprint,b.visualHeight,0,outside?materials.contextWall:materials.wall,b.holes);
+      polygon(g,b.footprint,.5,b.visualHeight,outside?materials.contextRoof:materials.roof,b.holes);
     } else if(b.model==='library'){
+      // Rear photos36/127 show an open lower level; the front terrace conceals it.
+      for(const x of [-17,-8,0,8,17])for(const z of [-10,5])box(g,.85,3.5,.85,x,-3.5,z,materials.trim);
       box(g,42,.8,32,0,0,0,materials.foundation);
       block(g,11,17,22,-13,.8,-2,5,3);
       block(g,11,26,22,13,.8,-2,8,3);
@@ -256,7 +351,7 @@ export function createCampusMap(container, buildings, onSelect, onError) {
   }
   function fitCampus(){
     const offset=camera.position.clone().sub(controls.target);controls.target.copy(center);camera.position.copy(center).add(offset);controls.update();
-    fitBox(new THREE.Box3(new THREE.Vector3(bounds.minX,0,bounds.minZ),new THREE.Vector3(bounds.maxX,40,bounds.maxZ)));
+    fitBox(new THREE.Box3(new THREE.Vector3(bounds.minX,-4,bounds.minZ),new THREE.Vector3(bounds.maxX,50,bounds.maxZ)));
   }
   fitCampus();controls.saveState();
   function animate(){
@@ -301,7 +396,7 @@ export function createCampusMap(container, buildings, onSelect, onError) {
       const group=bodyGroups.get(id);if(!group)return;
       const bounds=new THREE.Box3().setFromObject(group), y=bounds.min.y+.09;
       const x0=bounds.min.x-1,x1=bounds.max.x+1,z0=bounds.min.z-1,z1=bounds.max.z+1;
-      const points=[[x0,z0],[x1,z0],[x1,z1],[x0,z1],[x0,z0]].map(([x,z])=>new THREE.Vector3(x,y,z));
+      const points=[[x0,z0],[x1,z0],[x1,z1],[x0,z1],[x0,z0]].map(([x,z])=>new THREE.Vector3(x,Math.max(y,heightAt(x,z)+.28),z));
       outline=new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),new THREE.LineBasicMaterial({color:0x316d5c}));
       scene.add(outline);
     },

@@ -24,8 +24,9 @@ export const buildings = [
 export const sourceUrl = 'https://xiaoqing.fjsmu.edu.cn/map';
 for(const traced of campus.coreBuildings){
   const b=buildings.find(b=>b.id===traced.id);
-  b.position=[traced.position[0],0,traced.position[1]];b.modelScale=traced.scale;b.rotation=traced.rotation;
-  b.labelHeight*=traced.scale[1];b.positionStatus=traced.status;
+  b.position=[traced.position[0],traced.displayElevation??0,traced.position[1]];b.modelScale=traced.scale;b.rotation=traced.rotation;
+  b.labelHeight=b.labelHeight*traced.scale[1]+b.position[1];b.positionStatus=traced.status;
+  b.facts.push('地块高差为局部关系的显示参数，实测高程未知。');
   b.sources.push('坐标框影像近似描绘；非测绘点位');
   b.facts.push('当前位置在统一米制框中近似描绘，朝向与间距仍需现场核对。');
 }
@@ -33,9 +34,9 @@ for(const traced of campus.contextBuildings){
   const center=traced.points.reduce((p,q)=>[p[0]+q[0]/traced.points.length,p[1]+q[1]/traced.points.length],[0,0]);
   const local=p=>[p[0]-center[0],p[1]-center[1]];
   buildings.push({id:'outline-'+traced.id,name:traced.name??(traced.id.startsWith('N')?'北区':'南区')+'建筑轮廓 '+traced.id,aliases:traced.aliases??[],category:traced.category??'unverified',categoryLabel:traced.name?'照片对应建筑':'身份待核对',model:'footprint',
-    position:[center[0],0,center[1]],positionStatus:traced.status,labelHeight:traced.height+5,
+    position:[center[0],traced.displayElevation??0,center[1]],positionStatus:traced.status,labelHeight:traced.height+5+(traced.displayElevation??0),scopeStatus:traced.scopeStatus,
     footprint:traced.points.map(local),holes:traced.holes.map(ring=>ring.map(local)),visualHeight:traced.height,
     description:traced.name?'轮廓按参考影像近似描绘，具体立面与楼层资料继续核对。':'已记录建筑轮廓，真实名称、用途和立面待核对。',
     sources:['坐标框影像近似描绘',...(traced.sourcePhotos??[]).map(n=>'现场照片/截图 '+n)],
-    facts:['显示高度为视觉参数，不代表实测高度或准确楼层数。','位置与轮廓为近似描绘；未完成全部现场核对。'],floorNote:'尚无核对通过的楼层教室资料。',floors:[],rooms:[]});
+    facts:['显示高度为视觉参数，不代表实测高度或准确楼层数。','位置与轮廓为近似描绘；未完成全部现场核对。',traced.scopeStatus==='outside-reference'?'位于截图参考边界外，以灰色保留为周边参照。':traced.scopeStatus==='crosses-reference'?'近似轮廓与截图参考边界相交，边缘关系待核对。':'位于截图参考范围内；不代表已确认建筑身份。'],floorNote:'尚无核对通过的楼层教室资料。',floors:[],rooms:[]});
 }

@@ -30,7 +30,7 @@ const app=document.querySelector('#app');
 app.innerHTML=`
 <header class="header">
   <a class="brand" href="./" aria-label="Campus Canvas 首页"><span class="brand-mark">${icon('map')}</span><span><strong>Campus Canvas</strong><small>三明学院 · 校园空间</small></span></a>
-  <div class="header-center"><span class="version-dot"></span>全校园布局核对 <span class="version">v0.2</span></div>
+  <div class="header-center"><span class="version-dot"></span>轮廓与地形核对 <span class="version">v0.3</span></div>
   <div class="header-actions"><span id="network" class="network"></span><button class="text-button" id="about">${icon('info')}<span>资料说明</span></button><button class="icon-button mobile-only" id="explore" aria-label="打开地点列表" aria-expanded="false">${icon('menu')}</button></div>
 </header>
 <main class="workspace">
@@ -43,7 +43,8 @@ app.innerHTML=`
     <div class="explorer-footer"><span class="tiny-dot"></span><div><strong>从真实资料出发</strong><p>建筑参考现场照片<br>教室保留原有名称与编号</p></div></div>
   </aside>
   <section class="map-area" aria-label="校园地图">
-    <div class="map-heading"><span class="pill">${icon('layers')}2.5D 校园</span><span class="map-note">校界、高差待核对</span><button id="north" class="north" title="朝北" aria-label="地图朝北">↑ N</button></div>
+    <div class="map-heading"><span class="pill">${icon('layers')}2.5D 校园</span><span class="map-note">截图参考边界 · 局部高差</span><button id="north" class="north" title="朝北" aria-label="地图朝北">↑ N</button></div>
+    <details class="map-legend"><summary>${icon('layers')}<span>图例</span></summary><div class="legend-content"><strong>地块与道路</strong><span><i class="swatch lawn"></i>绿地</span><span><i class="swatch plaza"></i>广场 / 硬地</span><span><i class="swatch teaching"></i>教学地块</span><span><i class="swatch living"></i>生活地块</span><span><i class="swatch sports"></i>运动场地</span><span><i class="swatch road"></i>校内道路</span><span><i class="swatch regional"></i>周边道路</span><span><i class="swatch boundary"></i>截图参考边界</span><small>地块分类为示意；灰色建筑为边界外参照。局部台地、台阶及坡道体现照片中的高低关系，高度尚未实测。</small></div></details>
     <div id="map" class="map-canvas"></div>
     <div id="map-error" class="map-error" role="status" hidden></div>
     <div class="view-tools" role="group" aria-label="地图视角">
@@ -60,7 +61,7 @@ app.innerHTML=`
   </section>
   <aside id="detail" class="detail" aria-label="地点详情" hidden></aside>
 </main>
-<dialog id="about-dialog" aria-labelledby="about-title"><div class="dialog-heading"><h2 id="about-title">资料与当前范围</h2><button id="close-about" class="icon-button" aria-label="关闭资料说明">${icon('close')}</button></div><p>这一版展示校园布局核对进度：三座照片参考模型、44个影像建筑轮廓，以及公开地图中的道路和运动场地。建筑位置在同一坐标底图上近似描绘；名称、外形和朝向继续逐项核对。</p><div class="notice">绿色底板是建模工作范围，完整校界尚未确认。建筑高度、道路宽度和入口台阶均为显示参数；校园高差尚未还原，不提供导航。道路与建筑冲突的片段暂时隐藏，等待核对，尚未补齐全部校内道路。</div><h3>整体尺度</h3><p>当前工作范围东西约0.74公里、南北约1.28公里，不代表已确认的校园边界。学校公布占地1429亩（约95.27万平方米）；公开地图候选边界明显小于这一统计，不能直接当作完整校界。</p><h3>保留真实名称</h3><p>未确认身份的建筑保留“轮廓”编号。“综合实验楼分布索引”与博学楼的归属待核对，暂时单列楼层资料。408前门、后门分别保留；教室具体门位尚未标注。</p><h3>接下来</h3><p>继续核对校界、各楼外形、道路与高差，优先补齐可辨认的入口和场地关系。天气、室内家具布置和APK在后续版本接入。</p><a class="source-link" href="${sourceUrl}" target="_blank" rel="noopener noreferrer">学校官方校园示意图 ${icon('arrow')}</a><br><a class="source-link" href="https://www.fjsmu.edu.cn/xxjj/list.htm" target="_blank" rel="noopener noreferrer">学校官方占地统计 ${icon('arrow')}</a><small class="dialog-footnote">道路/运动场几何：© OpenStreetMap contributors，通行性待核对。参考影像：Esri, Vantor, Earthstar Geographics, and the GIS User Community；影像拍摄日期未知。原始影像与现场照片不随网站发布。收藏和浏览位置保存在本机；清理浏览器数据会移除它们。</small></dialog>
+<dialog id="about-dialog" aria-labelledby="about-title"><div class="dialog-heading"><h2 id="about-title">资料与当前范围</h2><button id="close-about" class="icon-button" aria-label="关闭资料说明">${icon('close')}</button></div><p>这一版根据手机截图描绘主校园蓝色虚线参考范围，保留南北区连接的收窄与东侧凹口。三座照片参考模型、44个影像建筑轮廓共用近似坐标；边界外建筑保留为灰色参照。</p><div class="notice">蓝色虚线来自地图截图配准，并非测绘校界。地块颜色表示近似用途。照片确认的局部高低关系用台地、台阶、坡道和桥下空间表现；所有高度都是可调显示值，未核对区域保留参考面。道路宽度、建筑高度与通行性待核对，不提供导航。</div><h3>整体尺度</h3><p>建模工作框东西约0.74公里、南北约1.28公里，用于容纳校园及周边参照。学校公布占地1429亩（约95.27万平方米），这一统计与截图中的主校园参考范围口径可能不同，不能用它直接放大轮廓。</p><h3>保留真实名称</h3><p>未确认身份的建筑保留“轮廓”编号。“综合实验楼分布索引”与博学楼的归属待核对，暂时单列楼层资料。408前门、后门分别保留；教室具体门位尚未标注。</p><h3>接下来</h3><p>继续核对各楼外形、道路和高差，补齐可辨认的入口关系。天气、室内家具布置和APK在后续版本接入。</p><a class="source-link" href="${sourceUrl}" target="_blank" rel="noopener noreferrer">学校官方校园示意图 ${icon('arrow')}</a><br><a class="source-link" href="https://www.fjsmu.edu.cn/xxjj/list.htm" target="_blank" rel="noopener noreferrer">学校官方占地统计 ${icon('arrow')}</a><small class="dialog-footnote">道路/运动场几何：© OpenStreetMap contributors，通行性待核对；与建筑冲突的路段暂时隐藏。参考影像：Esri, Vantor, Earthstar Geographics, and the GIS User Community；影像拍摄日期未知。原始截图、影像与现场照片不随网站发布。收藏和浏览位置保存在本机；清理浏览器数据会移除它们。</small></dialog>
 <div id="toast" class="toast" role="status" hidden></div>`;
 const $=id=>document.getElementById(id);
 function persist(){if(!writeState(storage,state))notify('本机存储不可用，此次浏览记录不会保存。');}
