@@ -1,0 +1,2053 @@
+{
+  "version": "0.5.0",
+  "status": "measurement-registration-pending",
+  "reference": {
+    "width": 1050,
+    "height": 1600,
+    "metresPerPixelApprox": 0.8349
+  },
+  "buildings": [
+    {
+      "id": "N01",
+      "name": "厚德楼",
+      "category": "teaching",
+      "identityStatus": "source-named-pending-confirmation",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              625,
+              239
+            ],
+            [
+              717,
+              231
+            ],
+            [
+              719,
+              253
+            ],
+            [
+              630,
+              263
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": [
+        108,
+        173
+      ]
+    },
+    {
+      "id": "N02",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              721,
+              206
+            ],
+            [
+              747,
+              203
+            ],
+            [
+              755,
+              309
+            ],
+            [
+              728,
+              314
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N03",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              785,
+              210
+            ],
+            [
+              813,
+              213
+            ],
+            [
+              813,
+              324
+            ],
+            [
+              786,
+              323
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N04",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              814,
+              265
+            ],
+            [
+              873,
+              266
+            ],
+            [
+              872,
+              281
+            ],
+            [
+              813,
+              280
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N05",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              825,
+              307
+            ],
+            [
+              870,
+              307
+            ],
+            [
+              870,
+              323
+            ],
+            [
+              825,
+              323
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N06",
+      "name": "北区食堂",
+      "category": "service",
+      "identityStatus": "source-named-pending-confirmation",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              585,
+              307
+            ],
+            [
+              653,
+              307
+            ],
+            [
+              656,
+              355
+            ],
+            [
+              588,
+              356
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": [
+        96,
+        104,
+        108
+      ]
+    },
+    {
+      "id": "N07",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              585,
+              378
+            ],
+            [
+              651,
+              378
+            ],
+            [
+              653,
+              393
+            ],
+            [
+              586,
+              394
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N08",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              643,
+              393
+            ],
+            [
+              710,
+              393
+            ],
+            [
+              711,
+              407
+            ],
+            [
+              644,
+              408
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N09",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              587,
+              433
+            ],
+            [
+              729,
+              433
+            ],
+            [
+              729,
+              459
+            ],
+            [
+              587,
+              459
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N10",
+      "name": "理工楼2号楼",
+      "category": "teaching",
+      "identityStatus": "source-named-pending-confirmation",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              482,
+              516
+            ],
+            [
+              575,
+              516
+            ],
+            [
+              575,
+              534
+            ],
+            [
+              530,
+              534
+            ],
+            [
+              529,
+              546
+            ],
+            [
+              488,
+              547
+            ],
+            [
+              487,
+              538
+            ],
+            [
+              482,
+              538
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": [
+        84,
+        90
+      ]
+    },
+    {
+      "id": "N11",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              481,
+              566
+            ],
+            [
+              577,
+              566
+            ],
+            [
+              577,
+              588
+            ],
+            [
+              481,
+              588
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N12",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              620,
+              507
+            ],
+            [
+              684,
+              507
+            ],
+            [
+              684,
+              524
+            ],
+            [
+              637,
+              524
+            ],
+            [
+              637,
+              598
+            ],
+            [
+              620,
+              598
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N13",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              649,
+              547
+            ],
+            [
+              686,
+              547
+            ],
+            [
+              686,
+              568
+            ],
+            [
+              649,
+              568
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N14",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              638,
+              587
+            ],
+            [
+              687,
+              587
+            ],
+            [
+              687,
+              606
+            ],
+            [
+              638,
+              606
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N15",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              692,
+              498
+            ],
+            [
+              735,
+              498
+            ],
+            [
+              735,
+              654
+            ],
+            [
+              645,
+              654
+            ],
+            [
+              645,
+              610
+            ],
+            [
+              692,
+              610
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N16",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              498,
+              623
+            ],
+            [
+              568,
+              623
+            ],
+            [
+              568,
+              645
+            ],
+            [
+              498,
+              645
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N17",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              494,
+              667
+            ],
+            [
+              544,
+              667
+            ],
+            [
+              544,
+              682
+            ],
+            [
+              494,
+              682
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N18",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              677,
+              721
+            ],
+            [
+              770,
+              721
+            ],
+            [
+              770,
+              748
+            ],
+            [
+              677,
+              748
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N19",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              863,
+              761
+            ],
+            [
+              904,
+              740
+            ],
+            [
+              913,
+              758
+            ],
+            [
+              872,
+              779
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N20",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              872,
+              793
+            ],
+            [
+              915,
+              776
+            ],
+            [
+              922,
+              794
+            ],
+            [
+              879,
+              811
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "N21",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              883,
+              824
+            ],
+            [
+              925,
+              805
+            ],
+            [
+              932,
+              823
+            ],
+            [
+              890,
+              842
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S01",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              484,
+              1145
+            ],
+            [
+              584,
+              1145
+            ],
+            [
+              584,
+              1176
+            ],
+            [
+              484,
+              1176
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S02",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              647,
+              1149
+            ],
+            [
+              705,
+              1149
+            ],
+            [
+              705,
+              1183
+            ],
+            [
+              647,
+              1183
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S03",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              811,
+              1137
+            ],
+            [
+              979,
+              1137
+            ],
+            [
+              979,
+              1219
+            ],
+            [
+              945,
+              1219
+            ],
+            [
+              945,
+              1158
+            ],
+            [
+              830,
+              1158
+            ],
+            [
+              830,
+              1173
+            ],
+            [
+              811,
+              1173
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S04",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              746,
+              1209
+            ],
+            [
+              972,
+              1209
+            ],
+            [
+              972,
+              1239
+            ],
+            [
+              746,
+              1239
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S05",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              805,
+              1208
+            ],
+            [
+              842,
+              1208
+            ],
+            [
+              842,
+              1183
+            ],
+            [
+              805,
+              1183
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S06",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              755,
+              1174
+            ],
+            [
+              789,
+              1174
+            ],
+            [
+              789,
+              1203
+            ],
+            [
+              755,
+              1203
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S07",
+      "name": "荷花苑1号楼",
+      "category": "service",
+      "identityStatus": "source-named-pending-confirmation",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              336,
+              1170
+            ],
+            [
+              431,
+              1170
+            ],
+            [
+              431,
+              1188
+            ],
+            [
+              336,
+              1188
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": [
+        129,
+        171
+      ]
+    },
+    {
+      "id": "S08",
+      "name": "荷花苑2号楼",
+      "category": "service",
+      "identityStatus": "source-named-pending-confirmation",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              329,
+              1200
+            ],
+            [
+              443,
+              1200
+            ],
+            [
+              443,
+              1293
+            ],
+            [
+              329,
+              1293
+            ]
+          ],
+          "holes": [
+            [
+              [
+                346,
+                1218
+              ],
+              [
+                426,
+                1218
+              ],
+              [
+                426,
+                1275
+              ],
+              [
+                346,
+                1275
+              ]
+            ]
+          ]
+        }
+      ],
+      "sourcePhotos": [
+        2,
+        129,
+        170,
+        171
+      ]
+    },
+    {
+      "id": "S09",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              348,
+              1300
+            ],
+            [
+              429,
+              1300
+            ],
+            [
+              429,
+              1310
+            ],
+            [
+              348,
+              1310
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S10",
+      "name": "学生活动中心",
+      "category": "service",
+      "identityStatus": "source-named-pending-confirmation",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              471,
+              1306
+            ],
+            [
+              532,
+              1306
+            ],
+            [
+              532,
+              1340
+            ],
+            [
+              471,
+              1340
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": [
+        3,
+        4,
+        169
+      ]
+    },
+    {
+      "id": "S11",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              218,
+              1268
+            ],
+            [
+              320,
+              1268
+            ],
+            [
+              320,
+              1290
+            ],
+            [
+              218,
+              1290
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S12",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              245,
+              1335
+            ],
+            [
+              323,
+              1335
+            ],
+            [
+              323,
+              1359
+            ],
+            [
+              245,
+              1359
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S13",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              236,
+              1371
+            ],
+            [
+              316,
+              1371
+            ],
+            [
+              316,
+              1395
+            ],
+            [
+              236,
+              1395
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S14",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              246,
+              1404
+            ],
+            [
+              326,
+              1404
+            ],
+            [
+              326,
+              1429
+            ],
+            [
+              246,
+              1429
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S15",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              354,
+              1430
+            ],
+            [
+              412,
+              1449
+            ],
+            [
+              403,
+              1478
+            ],
+            [
+              345,
+              1459
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S16",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              344,
+              1397
+            ],
+            [
+              409,
+              1418
+            ],
+            [
+              401,
+              1442
+            ],
+            [
+              336,
+              1421
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S17",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              387,
+              1398
+            ],
+            [
+              506,
+              1414
+            ],
+            [
+              501,
+              1437
+            ],
+            [
+              382,
+              1421
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S18",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              441,
+              1356
+            ],
+            [
+              537,
+              1374
+            ],
+            [
+              530,
+              1406
+            ],
+            [
+              434,
+              1388
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S19",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              438,
+              1393
+            ],
+            [
+              537,
+              1415
+            ],
+            [
+              530,
+              1447
+            ],
+            [
+              431,
+              1425
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S20",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              688,
+              1257
+            ],
+            [
+              745,
+              1257
+            ],
+            [
+              745,
+              1372
+            ],
+            [
+              688,
+              1372
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S21",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              764,
+              1264
+            ],
+            [
+              850,
+              1264
+            ],
+            [
+              850,
+              1369
+            ],
+            [
+              764,
+              1369
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S22",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              677,
+              1380
+            ],
+            [
+              771,
+              1380
+            ],
+            [
+              771,
+              1445
+            ],
+            [
+              677,
+              1445
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S23",
+      "name": null,
+      "category": "pending",
+      "identityStatus": "unnamed-pending-identification",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              276,
+              1195
+            ],
+            [
+              318,
+              1195
+            ],
+            [
+              318,
+              1215
+            ],
+            [
+              276,
+              1215
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "library",
+      "name": "逸夫图书馆",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "sourcePhotos": [
+        36,
+        37,
+        38,
+        55,
+        56,
+        58,
+        59,
+        60,
+        62,
+        63
+      ],
+      "outlines": [
+        {
+          "id": "north-wing",
+          "outline": [
+            [
+              494,
+              922
+            ],
+            [
+              557,
+              925
+            ],
+            [
+              560,
+              942
+            ],
+            [
+              499,
+              944
+            ]
+          ],
+          "holes": []
+        },
+        {
+          "id": "south-wing",
+          "outline": [
+            [
+              492,
+              1014
+            ],
+            [
+              557,
+              1012
+            ],
+            [
+              560,
+              1030
+            ],
+            [
+              496,
+              1033
+            ]
+          ],
+          "holes": []
+        },
+        {
+          "id": "rear-connector",
+          "outline": [
+            [
+              499,
+              943
+            ],
+            {
+              "quadratic": [
+                [
+                  473,
+                  945
+                ],
+                [
+                  474,
+                  980
+                ]
+              ]
+            },
+            {
+              "quadratic": [
+                [
+                  474,
+                  1005
+                ],
+                [
+                  496,
+                  1014
+                ]
+              ]
+            },
+            [
+              510,
+              1014
+            ],
+            {
+              "quadratic": [
+                [
+                  493,
+                  980
+                ],
+                [
+                  513,
+                  943
+                ]
+              ]
+            }
+          ],
+          "holes": []
+        },
+        {
+          "id": "front-hall",
+          "outline": [
+            [
+              558,
+              942
+            ],
+            {
+              "quadratic": [
+                [
+                  584,
+                  979
+                ],
+                [
+                  557,
+                  1012
+                ]
+              ]
+            },
+            [
+              545,
+              1012
+            ],
+            {
+              "quadratic": [
+                [
+                  569,
+                  979
+                ],
+                [
+                  546,
+                  942
+                ]
+              ]
+            }
+          ],
+          "holes": []
+        },
+        {
+          "id": "central-roof",
+          "outline": [
+            [
+              510,
+              944
+            ],
+            [
+              551,
+              944
+            ],
+            [
+              551,
+              1012
+            ],
+            [
+              510,
+              1013
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "category": "study",
+      "identityStatus": "photo-supported"
+    },
+    {
+      "id": "boxue",
+      "name": "博学楼",
+      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "sourcePhotos": [
+        47,
+        48,
+        50,
+        51,
+        53,
+        64,
+        65,
+        66,
+        68,
+        69,
+        70,
+        71
+      ],
+      "outlines": [
+        {
+          "id": "body",
+          "outline": [
+            [
+              558,
+              784
+            ],
+            [
+              565,
+              880
+            ],
+            {
+              "quadratic": [
+                [
+                  571,
+                  893
+                ],
+                [
+                  561,
+                  902
+                ]
+              ]
+            },
+            {
+              "quadratic": [
+                [
+                  550,
+                  911
+                ],
+                [
+                  542,
+                  897
+                ]
+              ]
+            },
+            [
+              491,
+              897
+            ],
+            [
+              490,
+              874
+            ],
+            [
+              548,
+              871
+            ],
+            [
+              545,
+              840
+            ],
+            [
+              490,
+              843
+            ],
+            [
+              488,
+              823
+            ],
+            [
+              544,
+              822
+            ],
+            [
+              543,
+              809
+            ],
+            [
+              531,
+              809
+            ],
+            {
+              "quadratic": [
+                [
+                  511,
+                  805
+                ],
+                [
+                  517,
+                  787
+                ]
+              ]
+            },
+            {
+              "quadratic": [
+                [
+                  522,
+                  775
+                ],
+                [
+                  536,
+                  779
+                ]
+              ]
+            },
+            [
+              550,
+              781
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "category": "teaching",
+      "identityStatus": "photo-supported"
+    }
+  ],
+  "sports": [
+    {
+      "id": "north-track",
+      "name": "北区田径场跑道轮廓",
+      "type": "track",
+      "outline": [
+        [
+          598,
+          126
+        ],
+        [
+          633,
+          101
+        ],
+        [
+          650,
+          98
+        ],
+        [
+          668,
+          100
+        ],
+        [
+          682,
+          112
+        ],
+        [
+          688,
+          128
+        ],
+        [
+          686,
+          144
+        ],
+        [
+          678,
+          158
+        ],
+        [
+          626,
+          204
+        ],
+        [
+          612,
+          210
+        ],
+        [
+          596,
+          210
+        ],
+        [
+          582,
+          199
+        ],
+        [
+          575,
+          184
+        ],
+        [
+          574,
+          168
+        ],
+        [
+          581,
+          151
+        ]
+      ],
+      "geometryStatus": "image-roof-trace-pending-measurement-registration"
+    },
+    {
+      "id": "south-track",
+      "name": "南区田径场跑道轮廓",
+      "type": "track",
+      "outline": [
+        [
+          545,
+          1324
+        ],
+        [
+          548,
+          1305
+        ],
+        [
+          558,
+          1290
+        ],
+        [
+          576,
+          1280
+        ],
+        [
+          609,
+          1277
+        ],
+        [
+          635,
+          1288
+        ],
+        [
+          655,
+          1307
+        ],
+        [
+          666,
+          1328
+        ],
+        [
+          673,
+          1428
+        ],
+        [
+          667,
+          1456
+        ],
+        [
+          654,
+          1474
+        ],
+        [
+          632,
+          1486
+        ],
+        [
+          608,
+          1490
+        ],
+        [
+          581,
+          1485
+        ],
+        [
+          560,
+          1470
+        ],
+        [
+          548,
+          1450
+        ],
+        [
+          543,
+          1429
+        ]
+      ],
+      "geometryStatus": "image-roof-trace-pending-measurement-registration"
+    },
+    {
+      "id": "north-courts",
+      "name": "北区篮球场区域",
+      "type": "basketball",
+      "outline": [
+        [
+          658,
+          276
+        ],
+        [
+          714,
+          276
+        ],
+        [
+          714,
+          335
+        ],
+        [
+          658,
+          335
+        ]
+      ],
+      "geometryStatus": "image-roof-trace-pending-measurement-registration"
+    },
+    {
+      "id": "east-field",
+      "name": "东侧运动场（名称待核对）",
+      "type": "sports_ground",
+      "outline": [
+        [
+          920,
+          731
+        ],
+        [
+          940,
+          723
+        ],
+        [
+          957,
+          727
+        ],
+        [
+          970,
+          741
+        ],
+        [
+          980,
+          796
+        ],
+        [
+          977,
+          814
+        ],
+        [
+          967,
+          828
+        ],
+        [
+          950,
+          831
+        ],
+        [
+          934,
+          825
+        ],
+        [
+          925,
+          810
+        ],
+        [
+          915,
+          752
+        ]
+      ],
+      "geometryStatus": "image-roof-trace-pending-measurement-registration"
+    }
+  ],
+  "markers": [
+    {
+      "id": "administration",
+      "name": "行政楼",
+      "pixel": [
+        523,
+        391
+      ],
+      "status": "location-only-footprint-pending",
+      "sourcePhotos": [
+        "photo-90",
+        "photo-97",
+        "photo-98",
+        "photo-109"
+      ]
+    }
+  ],
+  "notes": [
+    "建筑轮廓按参考影像屋面近似描绘，位置和地面足迹仍需核对。",
+    "图书馆和博学楼保留原矢量曲线；行政楼只显示定位点。",
+    "与新测距框架的配准未完成，比例尺仅取自原影像坐标框。",
+    "道路、校界、知新楼和影像未覆盖区域待补。"
+  ]
+}

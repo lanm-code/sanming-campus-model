@@ -31,7 +31,7 @@ app.innerHTML=`
 <header class="header">
   <a class="brand" href="./" aria-label="Campus Canvas 首页"><span class="brand-mark">${icon('map')}</span><span><strong>Campus Canvas</strong><small>三明学院 · 校园空间</small></span></a>
   <div class="header-center"><span class="version-dot"></span>核心建筑平面校对 <span class="version">v0.4</span></div>
-  <div class="header-actions"><span id="network" class="network"></span><button class="text-button" id="about">${icon('info')}<span>资料说明</span></button><button class="icon-button mobile-only" id="explore" aria-label="打开地点列表" aria-expanded="false">${icon('menu')}</button></div>
+  <div class="header-actions"><a class="plan-entry" href="./plan.html" aria-label="打开二维平面核对地图" title="二维平面核对地图">${icon('map')}<span>平面核对</span></a><span id="network" class="network"></span><button class="text-button" id="about">${icon('info')}<span>资料说明</span></button><button class="icon-button mobile-only" id="explore" aria-label="打开地点列表" aria-expanded="false">${icon('menu')}</button></div>
 </header>
 <main class="workspace">
   <button id="scrim" class="scrim" aria-label="关闭地点列表" hidden></button>

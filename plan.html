@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f5f7f8" />
+    <meta name="description" content="三明学院二维校园轮廓核对图，支持拖动、缩放与建筑查找。测距配准仍待完成。" />
+    <title>三明学院 · 二维平面核对</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <main class="plan-app">
+      <header class="plan-header">
+        <div class="plan-title"><span class="title-mark" aria-hidden="true">▱</span><div><h1>三明学院</h1><p>二维平面核对 <span class="status-dot" aria-hidden="true"></span> 测距待核</p></div></div>
+        <a id="stereo-link" class="stereo-link" href="./">立体图 <span aria-hidden="true">↗</span></a>
+      </header>
+      <section id="map-viewport" class="map-viewport" tabindex="0" aria-label="校园二维核对地图，拖动平移，滚轮或双指缩放；方向键平移，Home键全览">
+        <svg id="plan-map" xmlns="http://www.w3.org/2000/svg" aria-label="三明学院建筑矢量轮廓">
+          <title>三明学院二维平面核对；屋面轮廓近似，测距配准未完成</title>
+          <g id="reference-layer"></g><g id="sports-layer"></g><g id="buildings-layer"></g><g id="markers-layer"></g><g id="labels-layer" aria-hidden="true"></g>
+        </svg>
+        <div id="search-panel" class="search-panel">
+          <form id="search-form" class="search-box" role="search">
+            <span aria-hidden="true" class="search-icon">⌕</span>
+            <input id="building-search" type="search" placeholder="搜索楼名 / N01、S08…" aria-label="搜索楼名或建筑编号" autocomplete="off" aria-controls="search-results" />
+            <button id="clear-search" type="button" class="clear-search" aria-label="清空搜索" hidden>×</button>
+          </form>
+          <div id="search-results" class="search-results" hidden></div>
+        </div>
+        <div class="map-controls" aria-label="地图视角控制">
+          <div class="zoom-controls"><button id="zoom-in" type="button" aria-label="放大地图" title="放大">+</button><button id="zoom-out" type="button" aria-label="缩小地图" title="缩小">−</button></div>
+          <button id="fit-map" type="button" class="view-button" title="全览全部轮廓">全览</button>
+          <button id="reset-map" type="button" class="view-button" title="恢复初始视角">重置</button>
+        </div>
+        <div id="image-controls" class="image-controls" hidden>
+          <label class="image-toggle"><input id="show-image" type="checkbox" />参考影像</label>
+          <input id="image-opacity" type="range" min="0" max="100" value="55" aria-label="参考影像透明度" />
+        </div>
+        <aside id="building-detail" class="building-detail" aria-label="所选建筑详情" hidden></aside>
+        <aside class="map-legend" aria-label="地图图例">
+          <span><i class="legend-named"></i>命名楼</span><span><i class="legend-pending"></i>待核楼</span><span><i class="legend-sports"></i>运动场</span><span><i class="legend-marker"></i>仅定位</span>
+        </aside>
+        <div class="map-footnote"><span id="map-mode">矢量模式</span><span id="zoom-level"></span></div>
+        <div id="plan-notice" class="plan-notice">屋面近似 · 测距配准待核</div>
+      </section>
+      <p id="map-announcement" class="sr-only" aria-live="polite"></p>
+    </main>
+    <script type="module" src="./src/plan-review.js"></script>
+  </body>
+</html>
