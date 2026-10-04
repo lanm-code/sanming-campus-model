@@ -19,6 +19,7 @@ let initialView;
 let selectedId = null;
 let renderQueued = false;
 let gesture = null;
+let imageOnly = false;
 const pointers = new Map();
 const featureElements = new Map();
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[character]));
@@ -29,12 +30,27 @@ const element = (tag, attributes, parent) => {
   return node;
 };
 const coordinates = outline => outline.flatMap(item => Array.isArray(item) ? [item] : item.quadratic);
+const labelWidth = (text, fontSize = 12) => [...text].reduce((sum, character) => sum + (/[^\u0000-\u00ff]/.test(character) ? fontSize : fontSize * 0.6), 0) + 10;
 function boundsFor(feature) {
   if (feature.marker) return { minX: feature.pixel[0] - 35, minY: feature.pixel[1] - 35, maxX: feature.pixel[0] + 35, maxY: feature.pixel[1] + 35 };
   const points = feature.outlines.flatMap(part => coordinates(part.outline));
   return { minX: Math.min(...points.map(point => point[0])), minY: Math.min(...points.map(point => point[1])), maxX: Math.max(...points.map(point => point[0])), maxY: Math.max(...points.map(point => point[1])) };
 }
-// Leave label room for supplemental places beyond the reference raster; this is view padding, not a footprint.
+function includePoints(points, padding = 0) {
+  for (const [x, y] of points) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+    fullBounds.minX = Math.min(fullBounds.minX, x - padding);
+    fullBounds.maxX = Math.max(fullBounds.maxX, x + padding);
+    fullBounds.minY = Math.min(fullBounds.minY, y - padding);
+    fullBounds.maxY = Math.max(fullBounds.maxY, y + padding);
+  }
+}
+for (const feature of plan.buildings) for (const part of feature.outlines) {
+  includePoints(coordinates(part.outline), 18);
+  for (const hole of part.holes ?? []) includePoints(coordinates(hole));
+}
+for (const sport of plan.sports) includePoints(coordinates(sport.outline), 18);
+// Leave label room beyond the reference raster; this is view padding, not a footprint.
 for (const marker of plan.markers) {
   fullBounds.minX = Math.min(fullBounds.minX, marker.pixel[0] - 160);
   fullBounds.maxX = Math.max(fullBounds.maxX, marker.pixel[0] + 160);
@@ -52,7 +68,8 @@ for (const feature of plan.buildings) {
   const group = element('g', { 'data-feature-id': feature.id }, $('#buildings-layer'));
   const parts = [];
   for (const part of feature.outlines) {
-    const path = element('path', { d: [outlinePath(part.outline), ...(part.holes ?? []).map(outlinePath)].join(' '), 'fill-rule': 'evenodd', class: `building-shape${feature.name ? '' : ' pending'}` }, group);
+    const partial = feature.outlineIsComplete === false || part.outlineIsComplete === false;
+    const path = element('path', { d: [outlinePath(part.outline), ...(part.holes ?? []).map(outlinePath)].join(' '), 'fill-rule': 'evenodd', class: `building-shape${feature.name ? '' : ' pending'}${partial ? ' partial' : ''}${feature.category === 'sports' ? ' sports-building' : ''}` }, group);
     element('title', {}, path).textContent = `${feature.name ?? '名称待核'} · ${feature.id}`;
     parts.push(path);
   }
@@ -67,17 +84,36 @@ for (const marker of plan.markers) {
   featureElements.set(marker.id, [circle, cross]);
 }
 const imageSource = window.__PLAN_REVIEW_IMAGE__;
-if (typeof imageSource === 'string' && /^data:image\/(png|jpeg|webp);base64,/i.test(imageSource)) {
-  const image = element('image', { x: 0, y: 0, width: plan.reference.width, height: plan.reference.height, href: imageSource, opacity: 0.55, 'pointer-events': 'none' }, $('#reference-layer'));
+const isLocalImage = typeof imageSource === 'string' && /^data:image\/(png|jpeg|webp|svg\+xml);base64,/i.test(imageSource);
+if (isLocalImage) {
+  const layout = window.__PLAN_REVIEW_IMAGE_LAYOUT__ ?? {};
+  const x = Number.isFinite(layout.x) ? layout.x : 0;
+  const y = Number.isFinite(layout.y) ? layout.y : 0;
+  const width = Number.isFinite(layout.width) && layout.width > 0 ? layout.width : plan.reference.width;
+  const height = Number.isFinite(layout.height) && layout.height > 0 ? layout.height : plan.reference.height;
+  const matrixValues = Array.isArray(layout.transform) ? layout.transform : typeof layout.transform === 'string' && /^matrix\(.*\)$/.test(layout.transform.trim()) ? layout.transform.trim().slice(7, -1).trim().split(/[\s,]+/).map(Number) : null;
+  const matrix = matrixValues?.length === 6 && matrixValues.every(Number.isFinite) ? matrixValues : [1, 0, 0, 1, 0, 0];
+  const [a, b, c, d, e, f] = matrix;
+  includePoints([[x, y], [x + width, y], [x, y + height], [x + width, y + height]].map(([px, py]) => [a * px + c * py + e, b * px + d * py + f]));
+  const image = element('image', { x, y, width, height, transform: `matrix(${matrix.join(' ')})`, href: imageSource, opacity: 0.55, 'pointer-events': 'none' }, $('#reference-layer'));
   image.style.display = 'none';
   $('#image-controls').hidden = false;
+  if (typeof layout.label === 'string' && layout.label.trim()) $('#image-label').textContent = layout.label.trim();
   const updateImage = () => {
-    image.style.display = $('#show-image').checked ? '' : 'none';
-    image.setAttribute('opacity', Number($('#image-opacity').value) / 100);
-    $('#image-opacity').disabled = !$('#show-image').checked;
-    $('#map-mode').textContent = $('#show-image').checked ? '参考影像叠加' : '矢量模式';
+    imageOnly = $('#image-only').checked;
+    if (imageOnly) $('#show-image').checked = true;
+    const shown = $('#show-image').checked;
+    image.style.display = shown ? '' : 'none';
+    image.setAttribute('opacity', imageOnly ? 1 : Number($('#image-opacity').value) / 100);
+    $('#image-opacity').disabled = !shown || imageOnly;
+    for (const selector of ['#sports-layer', '#buildings-layer', '#markers-layer', '#labels-layer']) $(selector).style.display = imageOnly ? 'none' : '';
+    $('.map-legend').hidden = imageOnly;
+    $('#map-mode').textContent = imageOnly ? '只看参考影像' : shown ? '影像与矢量叠加' : '矢量模式';
+    $('#plan-notice').textContent = imageOnly ? '影像拼图 · 局部配准待核' : '屋面近似 · 局部待核';
+    requestRender();
   };
-  $('#show-image').addEventListener('change', updateImage);
+  $('#show-image').addEventListener('change', () => { if (!$('#show-image').checked) $('#image-only').checked = false; updateImage(); });
+  $('#image-only').addEventListener('change', updateImage);
   $('#image-opacity').addEventListener('input', updateImage);
   updateImage();
 } else {
@@ -97,6 +133,7 @@ function requestRender() {
 function renderLabels() {
   const layer = $('#labels-layer');
   layer.replaceChildren();
+  if (imageOnly) return;
   const candidates = features.map(feature => {
     const bounds = boundsFor(feature);
     return { id: feature.id, text: feature.label ?? feature.name ?? feature.id, world: feature.marker ? feature.pixel : [(bounds.minX + bounds.maxX) / 2, (bounds.minY + bounds.maxY) / 2], named: !!feature.name, selected: selectedId === feature.id, priority: selectedId === feature.id ? 0 : ['library', 'boxue'].includes(feature.id) ? 1 : feature.name ? 2 : 4 };
@@ -112,7 +149,7 @@ function renderLabels() {
     const sx = (x - view.cx) * view.scale + viewport.width / 2;
     const sy = (y - view.cy) * view.scale + viewport.height / 2;
     const fontSize = candidate.named || candidate.selected ? 12 : 10;
-    const width = [...candidate.text].reduce((sum, character) => sum + (/[^\u0000-\u00ff]/.test(character) ? fontSize : fontSize * 0.6), 0) + 10;
+    const width = labelWidth(candidate.text, fontSize);
     const height = fontSize + 9;
     const box = { x: sx - width / 2, y: sy - height / 2, width, height };
     if (sx < -width / 2 || sy < -height / 2 || sx > viewport.width + width / 2 || sy > viewport.height + height / 2) continue;
@@ -143,14 +180,22 @@ function selectFeature(id, focus = false) {
   const feature = featuresById.get(id);
   if (!feature) { closeDetail(); return; }
   selectedId = id;
-  const category = { teaching: '教学楼', study: '图书馆', service: '服务设施', pending: '类别待核' }[feature.category] ?? '类别待核';
+  const category = { teaching: '教学楼', study: '图书馆', service: '服务设施', sports: '体育设施', pending: '类别待核' }[feature.category] ?? '类别待核';
   const sources = (feature.sourcePhotos ?? []).map(value => String(value).replace(/^photo-/, ''));
-  const status = feature.marker ? feature.displayStatus ?? '仅定位 · 占地待核' : feature.name ? '测距与地面足迹待核' : '名称与轮廓待核';
-  const note = feature.marker ? feature.detailNote ?? '当前只有中心定位标记，尚未确认占地轮廓。' : '轮廓依据影像屋面近似描绘，地面足迹与测距配准尚未完成。';
-  detail.innerHTML = `<button type="button" class="detail-close" aria-label="关闭建筑详情">×</button><h2>${escape(feature.name ?? '名称待核')}</h2><p class="detail-meta">${escape(feature.id)}${feature.marker ? '' : ` · ${escape(category)}`}</p><span class="detail-status">${escape(status)}</span><p class="detail-note">${escape(note)}</p><p class="detail-sources">${sources.length ? `参考照片：${sources.map(escape).join('、')}` : '参考来源：影像描绘；交叉核对照片待补。'}</p>`;
+  const partial = feature.outlineIsComplete === false || feature.outlines?.some(part => part.outlineIsComplete === false);
+  const status = feature.displayStatus ?? (feature.marker ? '仅定位 · 占地待核' : partial ? '可见屋面片段 · 轮廓待补' : feature.name ? '测距与地面足迹待核' : '名称与轮廓待核');
+  const note = feature.detailNote ?? (feature.marker ? '当前只有中心定位标记，尚未确认占地轮廓。' : partial ? '虚线只表示可见屋面片段，尚未补齐整栋边缘，不能作为完整建筑占地。' : '轮廓依据影像屋面近似描绘，地面足迹与测距配准尚未完成。');
+  const reference = feature.referenceNote ? `${feature.referenceNote}${sources.length ? `\n参考照片：${sources.join('、')}` : ''}` : sources.length ? `参考照片：${sources.join('、')}` : '参考来源：影像描绘；交叉核对照片待补。';
+  const schoolOwned = ['user-confirmed-school-owned', 'confirmed-school-owned'].includes(feature.ownershipStatus);
+  const outsideReference = typeof feature.boundaryStatus === 'string' && feature.boundaryStatus.includes('outside');
+  const ownership = schoolOwned && outsideReference ? '<p class="detail-ownership">校属已确认 · 蓝线外<span>蓝线为截图参考范围。</span></p>' : '';
+  const partIds = feature.outlines?.map(part => part.id).filter(id => /^[NS]\d{2}$/i.test(id) && id !== feature.id) ?? [];
+  const codes = [feature.id, ...partIds].join(' / ');
+  detail.innerHTML = `<button type="button" class="detail-close" aria-label="关闭建筑详情">×</button><h2>${escape(feature.name ?? '名称待核')}</h2><p class="detail-meta">${escape(codes)}${feature.marker ? '' : ` · ${escape(category)}`}</p><span class="detail-status">${escape(status)}</span>${ownership}<p class="detail-note">${escape(note)}</p><p class="detail-sources">${escape(reference)}</p>`;
   detail.hidden = false;
+  viewportElement.classList.add('has-detail');
   detail.querySelector('button').addEventListener('click', closeDetail);
-  $('#map-announcement').textContent = `已选择${feature.name ?? feature.id}，${feature.marker ? '占地待核' : '测距配准待核'}`;
+  $('#map-announcement').textContent = `已选择${feature.name ?? feature.id}，${status}`;
   if (focus) {
     const bounds = boundsFor(feature);
     const center = [(bounds.minX + bounds.maxX) / 2, (bounds.minY + bounds.maxY) / 2];
@@ -160,11 +205,12 @@ function selectFeature(id, focus = false) {
   }
   requestRender();
 }
-function closeDetail() { selectedId = null; detail.hidden = true; requestRender(); }
+function closeDetail() { selectedId = null; detail.hidden = true; viewportElement.classList.remove('has-detail'); requestRender(); }
 function matchesFor(query) {
   const normalized = query.trim().toLocaleLowerCase();
   if (!normalized) return [];
-  return features.filter(feature => feature.id.toLocaleLowerCase().includes(normalized) || feature.name?.toLocaleLowerCase().includes(normalized)).sort((a, b) => (a.id.toLocaleLowerCase() === normalized ? -1 : b.id.toLocaleLowerCase() === normalized ? 1 : 0));
+  const termsFor = feature => [feature.id, feature.name, feature.label, ...(feature.aliases ?? []), ...(feature.outlines?.map(part => part.id) ?? [])].filter(value => typeof value === 'string').map(value => value.toLocaleLowerCase());
+  return features.filter(feature => termsFor(feature).some(value => value.includes(normalized))).sort((a, b) => Number(!termsFor(a).includes(normalized)) - Number(!termsFor(b).includes(normalized)));
 }
 function renderSearch() {
   const query = searchInput.value.trim();
@@ -237,8 +283,38 @@ const zoom = factor => { if (!view) return; view = zoomAt(view, [viewport.width 
 $('#zoom-in').addEventListener('click', () => zoom(1.4));
 $('#zoom-out').addEventListener('click', () => zoom(1 / 1.4));
 const fitPadding = () => Math.min(viewport.width < 600 ? 26 : 42, Math.min(viewport.width, viewport.height) / 4);
+function fitOverview() {
+  const padding = fitPadding();
+  const outsideLabels = plan.buildings.filter(feature => {
+    if (!feature.name) return false;
+    const bounds = boundsFor(feature);
+    return bounds.minX < 0 || bounds.minY < 0 || bounds.maxX > plan.reference.width || bounds.maxY > plan.reference.height;
+  }).map(feature => {
+    const bounds = boundsFor(feature);
+    return { x: (bounds.minX + bounds.maxX) / 2, y: (bounds.minY + bounds.maxY) / 2, halfWidth: labelWidth(feature.label ?? feature.name) / 2 + 6, halfHeight: 16.5 };
+  });
+  let fitted = fitView(fullBounds, viewport, padding);
+  // Camera padding only: keep each fixed-pixel label inside an overview without changing roof geometry.
+  // Refit as the necessary world-space label margin changes with the fitted scale.
+  for (let iteration = 0; outsideLabels.length && iteration < 10; iteration++) {
+    const bounds = { ...fullBounds };
+    for (const label of outsideLabels) {
+      const dx = label.halfWidth / fitted.scale;
+      const dy = label.halfHeight / fitted.scale;
+      bounds.minX = Math.min(bounds.minX, label.x - dx);
+      bounds.maxX = Math.max(bounds.maxX, label.x + dx);
+      bounds.minY = Math.min(bounds.minY, label.y - dy);
+      bounds.maxY = Math.max(bounds.maxY, label.y + dy);
+    }
+    const next = fitView(bounds, viewport, padding);
+    const settled = Math.abs(next.scale - fitted.scale) < 1e-8 && Math.abs(next.cx - fitted.cx) < 1e-5 && Math.abs(next.cy - fitted.cy) < 1e-5;
+    fitted = next;
+    if (settled) break;
+  }
+  return fitted;
+}
 function resetView() { if (!initialView) return; view = { ...initialView }; rebaseGesture(); closeDetail(); results.hidden = true; requestRender(); }
-$('#fit-map').addEventListener('click', () => { if (!view) return; view = fitView(fullBounds, viewport, fitPadding()); rebaseGesture(); requestRender(); });
+$('#fit-map').addEventListener('click', () => { if (!view) return; view = fitOverview(); rebaseGesture(); requestRender(); });
 $('#reset-map').addEventListener('click', resetView);
 viewportElement.addEventListener('keydown', event => {
   if (event.target !== viewportElement && event.target !== svg) return;
@@ -255,7 +331,7 @@ new ResizeObserver(entries => {
   if (!(width > 0 && height > 0)) return;
   const wasInitial = !view || (initialView && Math.abs(view.cx - initialView.cx) < 1e-6 && Math.abs(view.cy - initialView.cy) < 1e-6 && Math.abs(view.scale - initialView.scale) < 1e-6);
   viewport = { width, height };
-  initialView = fitView(fullBounds, viewport, fitPadding());
+  initialView = fitOverview();
   limits.minScale = Math.min(0.06, initialView.scale);
   if (wasInitial) view = { ...initialView };
   else view = { ...view, scale: Math.max(limits.minScale, Math.min(limits.maxScale, view.scale)) };

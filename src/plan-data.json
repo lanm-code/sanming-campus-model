@@ -1,10 +1,21 @@
 {
-  "version": "0.5.1",
-  "status": "measurement-registration-pending",
+  "version": "0.6.0",
+  "status": "named-satellite-roof-review-pending-survey",
   "reference": {
     "width": 1050,
     "height": 1600,
     "metresPerPixelApprox": 0.8349
+  },
+  "registration": {
+    "method": "physical-feature-uniform-similarity",
+    "inliers": 48,
+    "rmsReferencePixels": 1.96163217339204,
+    "sourceDate": "2026-10-04",
+    "limits": [
+      "支持范围内的影像近似配准，不是地面测绘。",
+      "北端、知新楼和泳馆南附楼局部在验证范围外；屋面视差和不同时期影像仍有差异，不强行拉伸建筑。",
+      "新桌面测距截图仍未单独配准。"
+    ]
   },
   "buildings": [
     {
@@ -272,10 +283,10 @@
     },
     {
       "id": "N09",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "name": "紫荆苑1号楼",
+      "category": "service",
+      "identityStatus": "roof-context-and-satellite-label-supported",
+      "geometryStatus": "existing-roof-outline-pending-registration",
       "outlines": [
         {
           "id": "body",
@@ -300,65 +311,70 @@
           "holes": []
         }
       ],
-      "sourcePhotos": []
+      "sourcePhotos": [],
+      "referenceNote": "用户提供的带名称卫星截图07；屋面与相邻道路核对。",
+      "detailNote": "行政楼红色场地东侧、北区食堂南侧最南的长屋面；截图06亦显示同名。",
+      "displayStatus": "楼名已核对 · 屋面轮廓待核"
     },
     {
       "id": "N10",
       "name": "理工楼2号楼",
       "category": "teaching",
-      "identityStatus": "source-named-pending-confirmation",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "identityStatus": "roof-context-and-satellite-label-supported",
+      "geometryStatus": "registered-visible-roof-approximate",
       "outlines": [
         {
-          "id": "body",
+          "id": "N10",
           "outline": [
             [
-              482,
-              516
+              491.6,
+              526.68
             ],
             [
-              575,
-              516
+              520.97,
+              525.54
             ],
             [
-              575,
-              534
+              520.98,
+              519.66
             ],
             [
-              530,
-              534
+              569.15,
+              519.12
             ],
             [
-              529,
-              546
+              570.31,
+              529.7
             ],
             [
-              488,
-              547
+              519.79,
+              531.41
             ],
             [
-              487,
-              538
+              519.78,
+              539.05
             ],
             [
-              482,
-              538
+              491.58,
+              539.61
             ]
-          ],
-          "holes": []
+          ]
         }
       ],
       "sourcePhotos": [
         84,
         90
-      ]
+      ],
+      "referenceNote": "用户提供的带名称卫星截图06；屋面与相邻道路核对。",
+      "detailNote": "西侧院落组的北侧白色L屋面，和旧N10匹配。 N11为同院落南侧屋面，但是否同属理工2号楼整栋，截图没有独立确认；暂不单独命名N11。",
+      "displayStatus": "可见屋面近似 · 地面足迹待核"
     },
     {
       "id": "N11",
       "name": null,
       "category": "pending",
       "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "geometryStatus": "possible-ligong-2-south-part-pending",
       "outlines": [
         {
           "id": "body",
@@ -383,151 +399,51 @@
           "holes": []
         }
       ],
-      "sourcePhotos": []
-    },
-    {
-      "id": "N12",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
-      "outlines": [
-        {
-          "id": "body",
-          "outline": [
-            [
-              620,
-              507
-            ],
-            [
-              684,
-              507
-            ],
-            [
-              684,
-              524
-            ],
-            [
-              637,
-              524
-            ],
-            [
-              637,
-              598
-            ],
-            [
-              620,
-              598
-            ]
-          ],
-          "holes": []
-        }
-      ],
-      "sourcePhotos": []
-    },
-    {
-      "id": "N13",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
-      "outlines": [
-        {
-          "id": "body",
-          "outline": [
-            [
-              649,
-              547
-            ],
-            [
-              686,
-              547
-            ],
-            [
-              686,
-              568
-            ],
-            [
-              649,
-              568
-            ]
-          ],
-          "holes": []
-        }
-      ],
-      "sourcePhotos": []
-    },
-    {
-      "id": "N14",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
-      "outlines": [
-        {
-          "id": "body",
-          "outline": [
-            [
-              638,
-              587
-            ],
-            [
-              687,
-              587
-            ],
-            [
-              687,
-              606
-            ],
-            [
-              638,
-              606
-            ]
-          ],
-          "holes": []
-        }
-      ],
-      "sourcePhotos": []
+      "sourcePhotos": [],
+      "detailNote": "与N10位于同院落组，但截图仅明确理工2号楼北侧位置，独立分栋或整组边界需照片再核。",
+      "referenceNote": "用户提供的带名称卫星截图06；该轮廓仍待核对。"
     },
     {
       "id": "N15",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "name": "雨盖篮球场",
+      "category": "sports",
+      "identityStatus": "distinct-l-roof-context-and-satellite-label-supported",
+      "geometryStatus": "registered-visible-roof-approximate",
       "outlines": [
         {
-          "id": "body",
+          "id": "N15",
           "outline": [
             [
-              692,
-              498
+              691.35,
+              502.21
             ],
             [
-              735,
-              498
+              731.89,
+              501.07
             ],
             [
-              735,
-              654
+              737.61,
+              653.81
             ],
             [
-              645,
-              654
+              639.5,
+              659.59
             ],
             [
-              645,
-              610
+              638.96,
+              614.36
             ],
             [
-              692,
-              610
+              695.94,
+              611.48
             ]
-          ],
-          "holes": []
+          ]
         }
       ],
-      "sourcePhotos": []
+      "sourcePhotos": [],
+      "referenceNote": "用户提供的带名称卫星截图06；屋面与相邻道路核对。",
+      "detailNote": "北区东侧大白L屋面，对应篮球图标和雨盖篮球场；不能误命名为理工1号楼。 此为雨盖屋面近似，不能据此解释真实墙体封闭范围、楼层或地面高度。",
+      "displayStatus": "可见屋面近似 · 地面足迹待核"
     },
     {
       "id": "N16",
@@ -595,35 +511,38 @@
     },
     {
       "id": "N18",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "name": "实验综合楼",
+      "category": "teaching",
+      "identityStatus": "roof-context-and-satellite-label-supported",
+      "geometryStatus": "registered-visible-roof-approximate",
       "outlines": [
         {
-          "id": "body",
+          "id": "N18",
           "outline": [
             [
-              677,
-              721
+              668.81,
+              726
             ],
             [
-              770,
-              721
+              743.41,
+              727.84
             ],
             [
-              770,
-              748
+              743.39,
+              746.63
             ],
             [
-              677,
-              748
+              668.79,
+              745.97
             ]
-          ],
-          "holes": []
+          ]
         }
       ],
-      "sourcePhotos": []
+      "sourcePhotos": [],
+      "referenceNote": "用户提供的带名称卫星截图06；屋面与相邻道路核对。",
+      "detailNote": "位于北区最南端东侧横向楼；截图05亦可核对。 描边仅取主白屋面，东端屋面与连接段被标签/暗部遮挡，不能据此认为整个楼只有此矩形。",
+      "displayStatus": "局部屋面 · 完整轮廓待补",
+      "outlineIsComplete": false
     },
     {
       "id": "N19",
@@ -933,8 +852,8 @@
       "id": "S07",
       "name": "荷花苑1号楼",
       "category": "service",
-      "identityStatus": "source-named-pending-confirmation",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "identityStatus": "roof-context-and-satellite-label-supported",
+      "geometryStatus": "existing-roof-outline-pending-registration",
       "outlines": [
         {
           "id": "body",
@@ -962,14 +881,17 @@
       "sourcePhotos": [
         129,
         171
-      ]
+      ],
+      "referenceNote": "用户提供的带名称卫星截图01；屋面与相邻道路核对。",
+      "detailNote": "位于荷花苑2号楼院落正北的东西长屋面；截图04同样可交叉核对。",
+      "displayStatus": "楼名已核对 · 屋面轮廓待核"
     },
     {
       "id": "S08",
       "name": "荷花苑2号楼",
       "category": "service",
-      "identityStatus": "source-named-pending-confirmation",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "identityStatus": "roof-courtyard-and-satellite-label-supported",
+      "geometryStatus": "existing-roof-outline-pending-registration",
       "outlines": [
         {
           "id": "body",
@@ -1018,14 +940,17 @@
         129,
         170,
         171
-      ]
+      ],
+      "referenceNote": "用户提供的带名称卫星截图01；屋面与相邻道路核对。",
+      "detailNote": "1号楼南侧、中央道路西侧的内院组；原S08保留孔洞。截图02、04亦可核对。",
+      "displayStatus": "楼名已核对 · 屋面轮廓待核"
     },
     {
       "id": "S09",
       "name": null,
       "category": "pending",
       "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "geometryStatus": "court-edge-strip-not-clear-independent-roof",
       "outlines": [
         {
           "id": "body",
@@ -1050,7 +975,11 @@
           "holes": []
         }
       ],
-      "sourcePhotos": []
+      "sourcePhotos": [],
+      "detailNote": "旧S09轮廓落在南区篮球场北边缘附近，不是这批截图能明确命名的独立宿舍主体。",
+      "referenceNote": "用户提供的带名称卫星截图01；该轮廓仍待核对。",
+      "displayStatus": "区域性质待核 · 不确定是否有屋盖",
+      "outlineIsComplete": false
     },
     {
       "id": "S10",
@@ -1090,10 +1019,10 @@
     },
     {
       "id": "S11",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "name": "荷花苑4号楼",
+      "category": "service",
+      "identityStatus": "roof-context-and-satellite-label-supported",
+      "geometryStatus": "existing-roof-outline-pending-registration",
       "outlines": [
         {
           "id": "body",
@@ -1118,14 +1047,17 @@
           "holes": []
         }
       ],
-      "sourcePhotos": []
+      "sourcePhotos": [],
+      "referenceNote": "用户提供的带名称卫星截图01；屋面与相邻道路核对。",
+      "detailNote": "3号楼南侧、5A北侧的白色横屋面；不是截图最西侧的6B。",
+      "displayStatus": "楼名已核对 · 屋面轮廓待核"
     },
     {
       "id": "S12",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "name": "荷花苑5A号楼",
+      "category": "service",
+      "identityStatus": "roof-context-and-satellite-label-supported",
+      "geometryStatus": "existing-roof-outline-pending-registration",
       "outlines": [
         {
           "id": "body",
@@ -1150,14 +1082,17 @@
           "holes": []
         }
       ],
-      "sourcePhotos": []
+      "sourcePhotos": [],
+      "referenceNote": "用户提供的带名称卫星截图01；屋面与相邻道路核对。",
+      "detailNote": "4号楼正南、5B正北的横屋面；不能按旧S编号猜为6A或6B。",
+      "displayStatus": "楼名已核对 · 屋面轮廓待核"
     },
     {
       "id": "S13",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "name": "荷花苑5B号楼",
+      "category": "service",
+      "identityStatus": "roof-context-and-satellite-label-supported",
+      "geometryStatus": "existing-roof-outline-pending-registration",
       "outlines": [
         {
           "id": "body",
@@ -1182,14 +1117,17 @@
           "holes": []
         }
       ],
-      "sourcePhotos": []
+      "sourcePhotos": [],
+      "referenceNote": "用户提供的带名称卫星截图01；屋面与相邻道路核对。",
+      "detailNote": "5A南侧的横屋面；其更南侧S14的独立名称仍未确认。",
+      "displayStatus": "楼名已核对 · 屋面轮廓待核"
     },
     {
       "id": "S14",
       "name": null,
       "category": "pending",
       "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "geometryStatus": "identity-pending",
       "outlines": [
         {
           "id": "body",
@@ -1214,14 +1152,16 @@
           "holes": []
         }
       ],
-      "sourcePhotos": []
+      "sourcePhotos": [],
+      "detailNote": "位于5B正南的小屋面，附近餐饮POI不能直接给建筑命名。",
+      "referenceNote": "用户提供的带名称卫星截图01；该轮廓仍待核对。"
     },
     {
       "id": "S15",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "name": "荷花苑7B号楼",
+      "category": "service",
+      "identityStatus": "roof-context-and-satellite-label-supported",
+      "geometryStatus": "existing-roof-outline-pending-registration",
       "outlines": [
         {
           "id": "body",
@@ -1246,7 +1186,10 @@
           "holes": []
         }
       ],
-      "sourcePhotos": []
+      "sourcePhotos": [],
+      "referenceNote": "用户提供的带名称卫星截图02；屋面与相邻道路核对。",
+      "detailNote": "南区田径场西南、最靠南弧形道路的斜向屋面；截图02明确标注7B。相邻S16/S17不可据此一并命名。",
+      "displayStatus": "楼名已核对 · 屋面轮廓待核"
     },
     {
       "id": "S16",
@@ -1314,10 +1257,10 @@
     },
     {
       "id": "S18",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "name": "荷花苑8号楼",
+      "category": "service",
+      "identityStatus": "roof-context-and-satellite-label-supported",
+      "geometryStatus": "existing-roof-outline-pending-registration",
       "outlines": [
         {
           "id": "body",
@@ -1342,7 +1285,10 @@
           "holes": []
         }
       ],
-      "sourcePhotos": []
+      "sourcePhotos": [],
+      "referenceNote": "用户提供的带名称卫星截图02；屋面与相邻道路核对。",
+      "detailNote": "田径场西侧、篮球场东南的上方斜向长屋面；截图01和02均可对应。相邻S17、S19是否同一楼组尚待确认。",
+      "displayStatus": "楼名已核对 · 屋面轮廓待核"
     },
     {
       "id": "S19",
@@ -1381,7 +1327,7 @@
       "name": null,
       "category": "pending",
       "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "geometryStatus": "west-pool-platform-or-covered-annex-unresolved",
       "outlines": [
         {
           "id": "body",
@@ -1406,78 +1352,18 @@
           "holes": []
         }
       ],
-      "sourcePhotos": []
-    },
-    {
-      "id": "S21",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
-      "outlines": [
-        {
-          "id": "body",
-          "outline": [
-            [
-              764,
-              1264
-            ],
-            [
-              850,
-              1264
-            ],
-            [
-              850,
-              1369
-            ],
-            [
-              764,
-              1369
-            ]
-          ],
-          "holes": []
-        }
-      ],
-      "sourcePhotos": []
-    },
-    {
-      "id": "S22",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
-      "outlines": [
-        {
-          "id": "body",
-          "outline": [
-            [
-              677,
-              1380
-            ],
-            [
-              771,
-              1380
-            ],
-            [
-              771,
-              1445
-            ],
-            [
-              677,
-              1445
-            ]
-          ],
-          "holes": []
-        }
-      ],
-      "sourcePhotos": []
+      "sourcePhotos": [],
+      "detailNote": "在主厅西侧大浅色区域。可能是附属/平台或有顶结构，不能按白色纹理直接当封闭楼体；不等同S21主厅。",
+      "referenceNote": "用户提供的带名称卫星截图02；该轮廓仍待核对。",
+      "displayStatus": "区域性质待核 · 不确定是否有屋盖",
+      "outlineIsComplete": false
     },
     {
       "id": "S23",
-      "name": null,
-      "category": "pending",
-      "identityStatus": "unnamed-pending-identification",
-      "geometryStatus": "image-roof-trace-pending-measurement-registration",
+      "name": "荷花苑3号楼",
+      "category": "service",
+      "identityStatus": "partial-roof-context-and-satellite-label-supported",
+      "geometryStatus": "partial-roof-only-requires-redraw",
       "outlines": [
         {
           "id": "body",
@@ -1502,7 +1388,11 @@
           "holes": []
         }
       ],
-      "sourcePhotos": []
+      "sourcePhotos": [],
+      "referenceNote": "用户提供的带名称卫星截图01；屋面与相邻道路核对。",
+      "detailNote": "原S23只描了3号楼北侧一小段屋面，未覆盖完整主体；不能把该短条当完整3号楼。 位于2号楼以西、4号楼以北，和游泳馆无关。",
+      "displayStatus": "局部屋面 · 完整轮廓待补",
+      "outlineIsComplete": false
     },
     {
       "id": "library",
@@ -1803,6 +1693,356 @@
       ],
       "category": "teaching",
       "identityStatus": "photo-supported"
+    },
+    {
+      "id": "swimming-centre",
+      "name": "游泳馆",
+      "category": "sports",
+      "identityStatus": "roof-context-satellite-label-and-user-ownership-supported",
+      "geometryStatus": "registered-visible-roof-approximate",
+      "outlines": [
+        {
+          "id": "S21",
+          "outline": [
+            [
+              766.02,
+              1266.98
+            ],
+            [
+              847.67,
+              1265.88
+            ],
+            [
+              848.75,
+              1360.46
+            ],
+            [
+              765.92,
+              1362.73
+            ]
+          ]
+        },
+        {
+          "id": "S22",
+          "outline": [
+            [
+              699.52,
+              1388.51
+            ],
+            [
+              767.66,
+              1387.4
+            ],
+            [
+              771.13,
+              1443.21
+            ],
+            [
+              699.46,
+              1444.91
+            ]
+          ]
+        }
+      ],
+      "sourcePhotos": [],
+      "referenceNote": "用户提供的带名称卫星截图02；屋面与相邻道路核对。",
+      "detailNote": "只保留主厅和南附楼两处清晰的白色屋面；连接区域、西侧浅色平台和其他突出部分待核。校属由用户确认，蓝色虚线只是截图参考范围。南附楼屋面部分超出新旧影像配准验证范围，统一坐标仅用于近似对照。",
+      "displayStatus": "可见屋面分段 · 校属已确认",
+      "ownershipStatus": "user-confirmed-school-owned",
+      "boundaryStatus": "outside-user-screenshot-blue-reference",
+      "aliases": [
+        "S21",
+        "S22"
+      ],
+      "outlineIsComplete": false
+    },
+    {
+      "id": "ligong-1",
+      "name": "理工楼1号楼",
+      "category": "teaching",
+      "identityStatus": "courtyard-group-and-satellite-label-supported",
+      "geometryStatus": "existing-group-part-pending-registration",
+      "outlines": [
+        {
+          "id": "N12",
+          "outline": [
+            [
+              620,
+              507
+            ],
+            [
+              684,
+              507
+            ],
+            [
+              684,
+              524
+            ],
+            [
+              637,
+              524
+            ],
+            [
+              637,
+              598
+            ],
+            [
+              620,
+              598
+            ]
+          ],
+          "holes": []
+        },
+        {
+          "id": "N13",
+          "outline": [
+            [
+              649,
+              547
+            ],
+            [
+              686,
+              547
+            ],
+            [
+              686,
+              568
+            ],
+            [
+              649,
+              568
+            ]
+          ],
+          "holes": []
+        },
+        {
+          "id": "N14",
+          "outline": [
+            [
+              638,
+              587
+            ],
+            [
+              687,
+              587
+            ],
+            [
+              687,
+              606
+            ],
+            [
+              638,
+              606
+            ]
+          ],
+          "holes": []
+        }
+      ],
+      "sourcePhotos": [],
+      "referenceNote": "用户提供的带名称卫星截图06；屋面与相邻道路核对。",
+      "detailNote": "截图支持院落楼组的名称，三个屋面分段合并显示；各段地面足迹和连接关系仍需核对。",
+      "displayStatus": "院落楼组 · 地面足迹待核",
+      "aliases": [
+        "N12",
+        "N13",
+        "N14"
+      ],
+      "outlineIsComplete": false
+    },
+    {
+      "id": "S24",
+      "name": "南区荷花苑6B号楼（截图标注）",
+      "label": "荷花苑6B号楼（待核）",
+      "category": "service",
+      "identityStatus": "satellite-label-supported-group-name-conflict-pending",
+      "geometryStatus": "registered-visible-roof-approximate",
+      "outlineIsComplete": false,
+      "displayStatus": "可见屋面 · 完整轮廓待核",
+      "detailNote": "西侧三排宿舍的北块；在旧44个轮廓中缺失。 北块标6B，中块标B区；两名称的分区关系待用户核对，不能擅把此块叫6C。",
+      "referenceNote": "用户提供的带名称卫星截图01；实体影像配准后近似描绘。",
+      "outlines": [
+        {
+          "id": "visible-roof",
+          "outline": [
+            [
+              140.81,
+              1216.52
+            ],
+            [
+              192.5,
+              1217.74
+            ],
+            [
+              194.23,
+              1245.35
+            ],
+            [
+              143.13,
+              1246.48
+            ]
+          ]
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S25",
+      "name": "6号楼B区（截图标注）",
+      "label": "6号楼B区（待核）",
+      "category": "service",
+      "identityStatus": "satellite-label-supported-group-name-conflict-pending",
+      "geometryStatus": "registered-visible-roof-approximate",
+      "outlineIsComplete": false,
+      "displayStatus": "可见屋面 · 完整轮廓待核",
+      "detailNote": "西侧三排宿舍的中块；在旧44个轮廓中缺失。 只按图中B区保留名称，与北块6B是否同楼组待核。",
+      "referenceNote": "用户提供的带名称卫星截图01；实体影像配准后近似描绘。",
+      "outlines": [
+        {
+          "id": "visible-roof",
+          "outline": [
+            [
+              124.31,
+              1259.97
+            ],
+            [
+              197.74,
+              1261.22
+            ],
+            [
+              198.3,
+              1294.7
+            ],
+            [
+              125.46,
+              1294.04
+            ]
+          ]
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "S26",
+      "name": "6号楼A区（截图标注）",
+      "label": "6号楼A区（待核）",
+      "category": "service",
+      "identityStatus": "roof-context-and-satellite-label-supported",
+      "geometryStatus": "registered-visible-roof-approximate",
+      "outlineIsComplete": false,
+      "displayStatus": "可见屋面 · 完整轮廓待核",
+      "detailNote": "西侧三排宿舍的南块；在旧44个轮廓中缺失。 描边不包含南侧庭院或被树遮住的连接部分。",
+      "referenceNote": "用户提供的带名称卫星截图01；实体影像配准后近似描绘。",
+      "outlines": [
+        {
+          "id": "visible-roof",
+          "outline": [
+            [
+              109.58,
+              1309.3
+            ],
+            [
+              197.69,
+              1309.98
+            ],
+            [
+              198.83,
+              1348.16
+            ],
+            [
+              110.72,
+              1347.49
+            ]
+          ]
+        }
+      ],
+      "sourcePhotos": []
+    },
+    {
+      "id": "zhixin",
+      "name": "知新楼",
+      "label": "知新楼（局部屋面）",
+      "category": "teaching",
+      "identityStatus": "satellite-label-photo-and-user-ownership-supported",
+      "geometryStatus": "registered-visible-roof-approximate",
+      "outlineIsComplete": false,
+      "displayStatus": "局部屋面 · 校属已确认",
+      "detailNote": "此多边形只圈可见主灰屋面片段，沿斜向主体至南端圆弧部分；不是完整地面足迹或裙房外边界。 北西边与树木/阴影交界不清，手工边界不确定；不能将该片段直接认定为整栋15层楼完整形状。 科技楼标注在北东侧另一个屋面院区，是否与知新楼连接、是否为同栋不同部分未确认。 旧44轮廓无可对应完整知新楼条目，不能借用S23。 此处在旧影像配准验证覆盖之外，应以新拼图继续核对，不能根据全局配准误差推定该楼位置精度。",
+      "referenceNote": "用户提供的带名称卫星截图01；实体影像配准后近似描绘。",
+      "outlines": [
+        {
+          "id": "visible-roof",
+          "outline": [
+            [
+              -73.2,
+              1397.83
+            ],
+            [
+              -63.8,
+              1397.83
+            ],
+            [
+              -37.98,
+              1422.53
+            ],
+            [
+              -30.34,
+              1421.37
+            ],
+            [
+              -15.67,
+              1439.59
+            ],
+            [
+              -8.63,
+              1448.41
+            ],
+            [
+              -9.23,
+              1456.05
+            ],
+            [
+              -13.93,
+              1461.91
+            ],
+            [
+              -22.75,
+              1463.08
+            ],
+            [
+              -30.97,
+              1459.55
+            ],
+            [
+              -36.83,
+              1451.91
+            ],
+            [
+              -42.12,
+              1449.55
+            ],
+            [
+              -55.61,
+              1433.09
+            ],
+            [
+              -67.35,
+              1421.33
+            ],
+            [
+              -74.98,
+              1411.33
+            ]
+          ]
+        }
+      ],
+      "ownershipStatus": "user-confirmed-school-owned",
+      "boundaryStatus": "outside-user-screenshot-blue-reference",
+      "sourcePhotos": [
+        147,
+        151,
+        152,
+        153
+      ]
     }
   ],
   "sports": [
@@ -2042,33 +2282,14 @@
         "photo-98",
         "photo-109"
       ]
-    },
-    {
-      "id": "zhixin",
-      "name": "知新楼",
-      "label": "知新楼（约略）",
-      "pixel": [
-        -10,
-        1406
-      ],
-      "status": "photo-location-approximate-entry-area-not-footprint",
-      "schoolOwned": true,
-      "footprint": null,
-      "displayStatus": "约略位置 · 校属已确认",
-      "detailNote": "属于三明学院，位于你截图左下圈示区域。参考楼内照片定位，暂标记入口附近；照片定位可能有缓存，坐标基准及位置精度仍待核对，不能视为楼中心或占地轮廓。",
-      "sourcePhotos": [
-        "photo-147",
-        "photo-151",
-        "photo-152",
-        "photo-153"
-      ]
     }
   ],
   "notes": [
     "建筑轮廓按参考影像屋面近似描绘，位置和地面足迹仍需核对。",
     "图书馆和博学楼保留原矢量曲线；行政楼只显示定位点。",
-    "与新测距框架的配准未完成，比例尺仅取自原影像坐标框。",
-    "知新楼校属已确认，入口附近只作约略定位，占地轮廓待核。",
+    "7张不同的新卫星截图按实体重叠平移拼接，再等比配准；新桌面测距框架仍未单独配准。",
+    "游泳馆与知新楼校属由用户确认，位于截图蓝线外仍保留；蓝线不作为建筑裁切或校属判断。",
+    "知新楼只描可见屋面片段，完整楼体及地面足迹待补。",
     "道路、校界和影像未覆盖区域待补。"
   ]
 }

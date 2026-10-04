@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#f5f7f8" />
-    <meta name="description" content="三明学院二维校园轮廓核对图，支持拖动、缩放与建筑查找。测距配准仍待完成。" />
-    <title>三明学院 · 二维平面核对</title>
+    <meta name="description" content="三明学院二维屋面近似核对图，支持拖动、缩放与建筑查找。局部轮廓与测距配准仍待核对。" />
+    <title>三明学院 · 二维屋面核对</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
   </head>
   <body>
     <main class="plan-app">
       <header class="plan-header">
-        <div class="plan-title"><span class="title-mark" aria-hidden="true">▱</span><div><h1>三明学院</h1><p>二维平面核对 <span class="status-dot" aria-hidden="true"></span> 测距待核</p></div></div>
+        <div class="plan-title"><span class="title-mark" aria-hidden="true">▱</span><div><h1>三明学院</h1><p>二维屋面核对 <span class="status-dot" aria-hidden="true"></span> 局部待核</p></div></div>
         <a id="stereo-link" class="stereo-link" href="./">立体图 <span aria-hidden="true">↗</span></a>
       </header>
       <section id="map-viewport" class="map-viewport" tabindex="0" aria-label="校园二维核对地图，拖动平移，滚轮或双指缩放；方向键平移，Home键全览">
@@ -33,15 +33,16 @@
           <button id="reset-map" type="button" class="view-button" title="恢复初始视角">重置</button>
         </div>
         <div id="image-controls" class="image-controls" hidden>
-          <label class="image-toggle"><input id="show-image" type="checkbox" />参考影像</label>
+          <label class="image-toggle"><input id="show-image" type="checkbox" /><span id="image-label">参考影像</span></label>
           <input id="image-opacity" type="range" min="0" max="100" value="55" aria-label="参考影像透明度" />
+          <label class="image-toggle"><input id="image-only" type="checkbox" />只看影像</label>
         </div>
         <aside id="building-detail" class="building-detail" aria-label="所选建筑详情" hidden></aside>
         <aside class="map-legend" aria-label="地图图例">
-          <span><i class="legend-named"></i>命名楼</span><span><i class="legend-pending"></i>待核楼</span><span><i class="legend-sports"></i>运动场</span><span><i class="legend-marker"></i>仅定位</span>
+          <span><i class="legend-named"></i>命名楼</span><span><i class="legend-pending"></i>名称待核</span><span><i class="legend-partial"></i>屋面片段</span><span><i class="legend-sports"></i>体育设施</span><span><i class="legend-marker"></i>仅定位</span>
         </aside>
         <div class="map-footnote"><span id="map-mode">矢量模式</span><span id="zoom-level"></span></div>
-        <div id="plan-notice" class="plan-notice">屋面近似 · 测距配准待核</div>
+        <div id="plan-notice" class="plan-notice">屋面近似 · 局部待核</div>
       </section>
       <p id="map-announcement" class="sr-only" aria-live="polite"></p>
     </main>
