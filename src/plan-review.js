@@ -93,7 +93,7 @@ function renderLabels() {
   const candidates = features.map(feature => {
     const bounds = boundsFor(feature);
     return { id: feature.id, text: feature.name ?? feature.id, world: feature.marker ? feature.pixel : [(bounds.minX + bounds.maxX) / 2, (bounds.minY + bounds.maxY) / 2], named: !!feature.name, selected: selectedId === feature.id, priority: selectedId === feature.id ? 0 : ['library', 'boxue'].includes(feature.id) ? 1 : feature.name ? 2 : 4 };
-  }).filter(label => label.named || view.scale >= 0.72);
+  }).filter(label => label.named || label.selected || view.scale >= 0.72);
   if (view.scale >= 0.5) for (const sport of plan.sports) {
     const points = coordinates(sport.outline);
     candidates.push({ text: sport.name.replace(/跑道轮廓|区域|（名称待核对）/g, ''), world: [(Math.min(...points.map(p => p[0])) + Math.max(...points.map(p => p[0]))) / 2, (Math.min(...points.map(p => p[1])) + Math.max(...points.map(p => p[1]))) / 2], sport: true, priority: 3 });
@@ -147,6 +147,7 @@ function selectFeature(id, focus = false) {
     const center = [(bounds.minX + bounds.maxX) / 2, (bounds.minY + bounds.maxY) / 2];
     const scale = Math.min(limits.maxScale, Math.max(initialView.scale * 2.8, Math.min(viewport.width / Math.max(220, (bounds.maxX - bounds.minX) * 2), viewport.height / Math.max(320, (bounds.maxY - bounds.minY) * 2.4))));
     view = { cx: center[0], cy: center[1], scale };
+    rebaseGesture();
   }
   requestRender();
 }
@@ -172,6 +173,11 @@ $('#search-form').addEventListener('submit', event => { event.preventDefault(); 
 document.addEventListener('pointerdown', event => { if (!$('#search-panel').contains(event.target)) results.hidden = true; });
 function beginPan(pointerId, point, cancelled = false, featureId = null) {
   gesture = { type: 'pan', view: { ...view }, start: [...point], pointerId, cancelled, featureId, moved: false };
+}
+function rebaseGesture() {
+  if (!gesture || !pointers.size) return;
+  if (pointers.size >= 2) gesture = { type: 'pinch', view: { ...view }, startTouches: touchPoints(), cancelled: true };
+  else { const [id, point] = [...pointers][0]; beginPan(id, point, true); }
 }
 svg.addEventListener('pointerdown', event => {
   if (event.pointerType === 'mouse' && event.button !== 0) return;
@@ -218,18 +224,18 @@ svg.addEventListener('wheel', event => {
   view = zoomAt(view, screenPoint(event), Math.exp(-Math.max(-500, Math.min(500, pixels)) * 0.0018), limits, viewport);
   requestRender();
 }, { passive: false });
-const zoom = factor => { if (!view) return; view = zoomAt(view, [viewport.width / 2, viewport.height / 2], factor, limits, viewport); requestRender(); };
+const zoom = factor => { if (!view) return; view = zoomAt(view, [viewport.width / 2, viewport.height / 2], factor, limits, viewport); rebaseGesture(); requestRender(); };
 $('#zoom-in').addEventListener('click', () => zoom(1.4));
 $('#zoom-out').addEventListener('click', () => zoom(1 / 1.4));
 const fitPadding = () => Math.min(viewport.width < 600 ? 26 : 42, Math.min(viewport.width, viewport.height) / 4);
-function resetView() { if (!initialView) return; view = { ...initialView }; closeDetail(); results.hidden = true; requestRender(); }
-$('#fit-map').addEventListener('click', () => { if (!view) return; view = fitView(fullBounds, viewport, fitPadding()); requestRender(); });
+function resetView() { if (!initialView) return; view = { ...initialView }; rebaseGesture(); closeDetail(); results.hidden = true; requestRender(); }
+$('#fit-map').addEventListener('click', () => { if (!view) return; view = fitView(fullBounds, viewport, fitPadding()); rebaseGesture(); requestRender(); });
 $('#reset-map').addEventListener('click', resetView);
 viewportElement.addEventListener('keydown', event => {
   if (event.target !== viewportElement && event.target !== svg) return;
   if (!view) return;
   const deltas = { ArrowLeft: [70, 0], ArrowRight: [-70, 0], ArrowUp: [0, 70], ArrowDown: [0, -70] };
-  if (deltas[event.key]) { event.preventDefault(); view = panView(view, deltas[event.key]); requestRender(); }
+  if (deltas[event.key]) { event.preventDefault(); view = panView(view, deltas[event.key]); rebaseGesture(); requestRender(); }
   else if (event.key === '+' || event.key === '=') { event.preventDefault(); zoom(1.4); }
   else if (event.key === '-') { event.preventDefault(); zoom(1 / 1.4); }
   else if (event.key === 'Home') { event.preventDefault(); resetView(); }
@@ -244,5 +250,6 @@ new ResizeObserver(entries => {
   limits.minScale = Math.min(0.06, initialView.scale);
   if (wasInitial) view = { ...initialView };
   else view = { ...view, scale: Math.max(limits.minScale, Math.min(limits.maxScale, view.scale)) };
+  rebaseGesture();
   requestRender();
 }).observe(viewportElement);
