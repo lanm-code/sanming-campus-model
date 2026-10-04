@@ -24,11 +24,14 @@ export const buildings = [
 export const sourceUrl = 'https://xiaoqing.fjsmu.edu.cn/map';
 for(const traced of campus.coreBuildings){
   const b=buildings.find(b=>b.id===traced.id);
-  b.position=[traced.position[0],traced.displayElevation??0,traced.position[1]];b.modelScale=traced.scale;b.rotation=traced.rotation;
+  b.position=[traced.position[0],traced.displayElevation??0,traced.position[1]];b.modelScale=traced.scale;b.rotation=traced.rotation;b.structure=traced.structure;
   b.labelHeight=b.labelHeight*traced.scale[1]+b.position[1];b.positionStatus=traced.status;
   b.facts.push('地块高差为局部关系的显示参数，实测高程未知。');
   b.sources.push('坐标框影像近似描绘；非测绘点位');
-  b.facts.push('当前位置在统一米制框中近似描绘，朝向与间距仍需现场核对。');
+  b.facts.push(b.structure?'平面轮廓按影像近似描绘，入口方向结合照片和拍摄点核对；准确间距仍未知。':'当前位置在统一米制框中近似描绘，朝向与间距仍需现场核对。');
+  if(b.id==='library')b.facts.push('已核对正门朝东侧致用大道与工地；高翼在北、低翼在南，背面架空侧在西。');
+  if(b.id==='boxue')b.facts.push('本轮按影像重描长短不同的三翼、东侧连接体与圆弧部分，前门平台保留二层入口。');
+  if(b.id==='administration')b.facts.push('行政楼后坡高于楼边道路；周边坡面尚未完成校正，当前台地不能用于比较各楼真实地势。');
 }
 for(const traced of campus.contextBuildings){
   const center=traced.points.reduce((p,q)=>[p[0]+q[0]/traced.points.length,p[1]+q[1]/traced.points.length],[0,0]);

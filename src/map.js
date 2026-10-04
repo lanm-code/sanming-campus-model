@@ -5,6 +5,7 @@ import { campusBase } from './data.js';
 import { overviewExtent } from './geo.js';
 import { compileTerrain,intersectConvexPolygons } from './surface.js';
 import {createTerrainTriangles,createMeshHeightSampler} from './terrain-mesh.js';
+import {buildTracedStructure} from './structure.js';
 
 export function createCampusMap(container, buildings, onSelect, onError) {
   let renderer;
@@ -241,43 +242,8 @@ export function createCampusMap(container, buildings, onSelect, onError) {
       const outside=b.scopeStatus==='outside-reference'||b.scopeStatus==='crosses-reference';
       polygon(g,b.footprint,b.visualHeight,0,outside?materials.contextWall:materials.wall,b.holes);
       polygon(g,b.footprint,.5,b.visualHeight,outside?materials.contextRoof:materials.roof,b.holes);
-    } else if(b.model==='library'){
-      // Rear photos36/127 show an open lower level; the front terrace conceals it.
-      for(const x of [-17,-8,0,8,17])for(const z of [-10,5])box(g,.85,3.5,.85,x,-3.5,z,materials.trim);
-      box(g,42,.8,32,0,0,0,materials.foundation);
-      block(g,11,17,22,-13,.8,-2,5,3);
-      block(g,11,26,22,13,.8,-2,8,3);
-      block(g,19,7,11,0,.8,-9,2,5);
-      const entry=new THREE.Mesh(new THREE.CylinderGeometry(14,14,6,32,1,false,-Math.PI/2,Math.PI),materials.trim);
-      entry.position.set(0,3.8,8);entry.scale.z=.54;entry.castShadow=true;g.add(entry);
-      box(g,20,4,.5,0,.8,12,materials.glass);
-      box(g,18,.7,4,0,6.8,10,materials.trim);
-      stairs(g,24,.8,4,0,17,4);
-      box(g,.65,17,1,-18,.8,9,materials.glass);
-      box(g,.65,26,1,18,.8,9,materials.glass);
-      // Photo58: blue vertical strips and upper louvres on the unequal front wings.
-      for(const [x,h] of [[-13,17],[13,26]]){
-        for(const dx of [-4.6,4.6])box(g,.55,h-1,.22,x+dx,.8,9.12,materials.glass);
-        for(let row=0;row<4;row++)box(g,7,.2,.25,x,.8+h-1.1-row*.45,9.2,materials.dark);
-      }
-      curvedVolume(g,23,2,.7,6.8,12,1.8,materials.trim);
-    } else if(b.model==='boxue'){
-      // Photos66/71 show three transverse wings joined by one spine, with two court gaps.
-      box(g,47,1.2,51,0,0,0,materials.foundation);
-      for(const z of [-20,0,20])block(g,37,20,7,-3,1.2,z,6,12);
-      block(g,7,20,47,18,1.2,0,6,3);
-      const corner=new THREE.Group();corner.position.set(15,0,20);g.add(corner);
-      curvedVolume(corner,12,5,20,1.2,4,2.4,materials.wall);
-      for(let floor=0;floor<6;floor++){
-        curvedVolume(corner,11.7,.16,2.1,1.2+floor*20/6+.6,4.18,2.4,materials.glass);
-        curvedVolume(corner,12.2,.35,.45,1.2+(floor+1)*20/6-.45,4.26,2.4,materials.trim);
-      }
-      curvedVolume(corner,12.8,5.8,.65,21.2,4.4,2.4,materials.roof);
-      const entrance2F=1.2+20/6;
-      box(g,9,20/6,5,15,1.2,28,materials.path);
-      box(g,7,3.2,.25,15,entrance2F,26.2,materials.dark);
-      stairs(g,9,entrance2F,11,15,35,10);
-      box(g,5,3.1,.25,-18,1.2,-23.65,materials.dark);
+    } else if(b.structure){
+      buildTracedStructure(g,b.structure,{box,polygon,stairs,materials,unit});
     } else {
       // Photos97/98: shallow curved frontage, broad central glazing and stone lower floors.
       box(g,47,1,34,0,0,0,materials.foundation);

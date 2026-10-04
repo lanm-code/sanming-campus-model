@@ -72,3 +72,15 @@ test('pool edges and neighbouring low building walls meet their terrain',()=>{
   }
   assert.ok(triangles.length<150000);
 });
+
+test('rebuilt entry forecourts meet the rendered mesh while the rear 1F access remains low',()=>{
+  for(const b of campus.coreBuildings.filter(b=>b.structure))for(const platform of b.structure.platforms){
+    const target=b.displayElevation+(b.id==='boxue'?b.structure.entries.find(e=>e.id==='main-2f').base:0);
+    for(const p of platform.points)assert.ok(Math.abs(meshHeight(...p)-target)<.2,b.id+' forecourt has a floating edge');
+  }
+  const boxue=campus.coreBuildings.find(b=>b.id==='boxue'),s=boxue.structure;
+  for(const e of s.entries){
+    const outside=e.point.map((v,i)=>v+e.normal[i]);
+    assert.ok(Math.abs(meshHeight(...outside)-(boxue.displayElevation+e.base))<.25,e.id+' threshold does not meet the terrain');
+  }
+});
