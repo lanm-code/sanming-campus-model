@@ -34,6 +34,13 @@ function boundsFor(feature) {
   const points = feature.outlines.flatMap(part => coordinates(part.outline));
   return { minX: Math.min(...points.map(point => point[0])), minY: Math.min(...points.map(point => point[1])), maxX: Math.max(...points.map(point => point[0])), maxY: Math.max(...points.map(point => point[1])) };
 }
+// Leave label room for supplemental places beyond the reference raster; this is view padding, not a footprint.
+for (const marker of plan.markers) {
+  fullBounds.minX = Math.min(fullBounds.minX, marker.pixel[0] - 160);
+  fullBounds.maxX = Math.max(fullBounds.maxX, marker.pixel[0] + 160);
+  fullBounds.minY = Math.min(fullBounds.minY, marker.pixel[1] - 35);
+  fullBounds.maxY = Math.max(fullBounds.maxY, marker.pixel[1] + 35);
+}
 function outlinePath(outline) {
   return outline.map((item, index) => Array.isArray(item) ? `${index ? 'L' : 'M'} ${item[0]} ${item[1]}` : `Q ${item.quadratic[0][0]} ${item.quadratic[0][1]} ${item.quadratic[1][0]} ${item.quadratic[1][1]}`).join(' ') + ' Z';
 }
@@ -56,7 +63,7 @@ for (const marker of plan.markers) {
   const [x, y] = marker.pixel;
   const circle = element('circle', { cx: x, cy: y, r: 6, class: 'location-marker' }, group);
   const cross = element('path', { d: `M ${x - 11} ${y} H ${x + 11} M ${x} ${y - 11} V ${y + 11}`, class: 'location-cross' }, group);
-  element('title', {}, group).textContent = `${marker.name} · 仅定位，占地待核`;
+  element('title', {}, group).textContent = `${marker.name} · ${marker.displayStatus ?? '仅定位，占地待核'}`;
   featureElements.set(marker.id, [circle, cross]);
 }
 const imageSource = window.__PLAN_REVIEW_IMAGE__;
@@ -92,7 +99,7 @@ function renderLabels() {
   layer.replaceChildren();
   const candidates = features.map(feature => {
     const bounds = boundsFor(feature);
-    return { id: feature.id, text: feature.name ?? feature.id, world: feature.marker ? feature.pixel : [(bounds.minX + bounds.maxX) / 2, (bounds.minY + bounds.maxY) / 2], named: !!feature.name, selected: selectedId === feature.id, priority: selectedId === feature.id ? 0 : ['library', 'boxue'].includes(feature.id) ? 1 : feature.name ? 2 : 4 };
+    return { id: feature.id, text: feature.label ?? feature.name ?? feature.id, world: feature.marker ? feature.pixel : [(bounds.minX + bounds.maxX) / 2, (bounds.minY + bounds.maxY) / 2], named: !!feature.name, selected: selectedId === feature.id, priority: selectedId === feature.id ? 0 : ['library', 'boxue'].includes(feature.id) ? 1 : feature.name ? 2 : 4 };
   }).filter(label => label.named || label.selected || view.scale >= 0.72);
   if (view.scale >= 0.5) for (const sport of plan.sports) {
     const points = coordinates(sport.outline);
@@ -138,7 +145,9 @@ function selectFeature(id, focus = false) {
   selectedId = id;
   const category = { teaching: '教学楼', study: '图书馆', service: '服务设施', pending: '类别待核' }[feature.category] ?? '类别待核';
   const sources = (feature.sourcePhotos ?? []).map(value => String(value).replace(/^photo-/, ''));
-  detail.innerHTML = `<button type="button" class="detail-close" aria-label="关闭建筑详情">×</button><h2>${escape(feature.name ?? '名称待核')}</h2><p class="detail-meta">${escape(feature.id)}${feature.marker ? '' : ` · ${escape(category)}`}</p><span class="detail-status">${feature.marker ? '仅定位 · 占地待核' : feature.name ? '测距与地面足迹待核' : '名称与轮廓待核'}</span><p class="detail-note">${feature.marker ? '当前只有中心定位标记，尚未确认占地轮廓。' : '轮廓依据影像屋面近似描绘，地面足迹与测距配准尚未完成。'}</p><p class="detail-sources">${sources.length ? `参考照片：${sources.map(escape).join('、')}` : '参考来源：影像描绘；交叉核对照片待补。'}</p>`;
+  const status = feature.marker ? feature.displayStatus ?? '仅定位 · 占地待核' : feature.name ? '测距与地面足迹待核' : '名称与轮廓待核';
+  const note = feature.marker ? feature.detailNote ?? '当前只有中心定位标记，尚未确认占地轮廓。' : '轮廓依据影像屋面近似描绘，地面足迹与测距配准尚未完成。';
+  detail.innerHTML = `<button type="button" class="detail-close" aria-label="关闭建筑详情">×</button><h2>${escape(feature.name ?? '名称待核')}</h2><p class="detail-meta">${escape(feature.id)}${feature.marker ? '' : ` · ${escape(category)}`}</p><span class="detail-status">${escape(status)}</span><p class="detail-note">${escape(note)}</p><p class="detail-sources">${sources.length ? `参考照片：${sources.map(escape).join('、')}` : '参考来源：影像描绘；交叉核对照片待补。'}</p>`;
   detail.hidden = false;
   detail.querySelector('button').addEventListener('click', closeDetail);
   $('#map-announcement').textContent = `已选择${feature.name ?? feature.id}，${feature.marker ? '占地待核' : '测距配准待核'}`;

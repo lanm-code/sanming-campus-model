@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0",
+  "version": "0.5.1",
   "status": "measurement-registration-pending",
   "reference": {
     "width": 1050,
@@ -2042,12 +2042,33 @@
         "photo-98",
         "photo-109"
       ]
+    },
+    {
+      "id": "zhixin",
+      "name": "知新楼",
+      "label": "知新楼（约略）",
+      "pixel": [
+        -10,
+        1406
+      ],
+      "status": "photo-location-approximate-entry-area-not-footprint",
+      "schoolOwned": true,
+      "footprint": null,
+      "displayStatus": "约略位置 · 校属已确认",
+      "detailNote": "属于三明学院，位于你截图左下圈示区域。参考楼内照片定位，暂标记入口附近；照片定位可能有缓存，坐标基准及位置精度仍待核对，不能视为楼中心或占地轮廓。",
+      "sourcePhotos": [
+        "photo-147",
+        "photo-151",
+        "photo-152",
+        "photo-153"
+      ]
     }
   ],
   "notes": [
     "建筑轮廓按参考影像屋面近似描绘，位置和地面足迹仍需核对。",
     "图书馆和博学楼保留原矢量曲线；行政楼只显示定位点。",
     "与新测距框架的配准未完成，比例尺仅取自原影像坐标框。",
-    "道路、校界、知新楼和影像未覆盖区域待补。"
+    "知新楼校属已确认，入口附近只作约略定位，占地轮廓待核。",
+    "道路、校界和影像未覆盖区域待补。"
   ]
 }
